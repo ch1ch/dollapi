@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.UserInfoMapper">
+    <!-- user_info query field-->
+    <sql id="columns">
+      id,
+      nick_name,
+      user_level,
+      phone_number,
+      user_point,
+      head_url,
+      gender,
+      game_money,
+      push_user_id,
+      doll_count,
+      status,
+      token,
+      create_time
+	</sql>
+
+    <!-- user_info result map-->
+    <resultMap type="com.dollapi.domain.UserInfo" id="UserInfoMap">
+        <id column="id" property="id"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="user_level" property="userLevel"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="user_point" property="userPoint"/>
+        <result column="head_url" property="headUrl"/>
+        <result column="gender" property="gender"/>
+        <result column="game_money" property="gameMoney"/>
+        <result column="push_user_id" property="pushUserId"/>
+        <result column="doll_count" property="dollCount"/>
+        <result column="status" property="status"/>
+        <result column="token" property="token"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save user_info -->
+    <insert id="save" parameterType="com.dollapi.domain.UserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{nickName},
+        #{userLevel},
+        #{phoneNumber},
+        #{userPoint},
+        #{headUrl},
+        #{gender},
+        #{gameMoney},
+        #{pushUserId},
+        #{dollCount},
+        #{status},
+        #{token},
+        Now()
+        )
+    </insert>
+
+    <!-- update user_info -->
+    <update id="update" parameterType="com.dollapi.domain.UserInfo">
+        UPDATE user_info
+        <set>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="userLevel != null">user_level = #{userLevel},</if>
+            <if test="phoneNumber != null">phone_number = #{phoneNumber},</if>
+            <if test="userPoint != null">user_point = #{userPoint},</if>
+            <if test="headUrl != null">head_url = #{headUrl},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="gameMoney != null">game_money = #{gameMoney},</if>
+            <if test="pushUserId != null">push_user_id = #{pushUserId},</if>
+            <if test="dollCount != null">doll_count = #{dollCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="token != null">token = #{token},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectByUnionId" parameterType="String" resultMap="UserInfoMap">
+        SELECT * FROM user_info WHERE user_info.id IN (SELECT user_third.user_id FROM user_third WHERE user_third.union_id=#{unionId} )LIMIT 1
+    </select>
+
+    <select id="selectByToken" parameterType="String" resultMap="UserInfoMap">
+        SELECT <include refid="columns"/> FROM user_info WHERE user_info.token=#{token}
+    </select>
+
+</mapper> 

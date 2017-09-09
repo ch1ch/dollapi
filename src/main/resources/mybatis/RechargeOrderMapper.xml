@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.RechargeOrderMapper">
+    <!-- recharge_order query field-->
+    <sql id="columns">
+      id,
+      user_id,
+      user_name,
+      package_id,
+      package_name,
+      price,
+      game_money,
+      pay_type,
+      status
+	</sql>
+
+    <!-- recharge_order result map-->
+    <resultMap type="com.dollapi.domain.RechargeOrder" id="RechargeOrderMap">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="package_id" property="packageId"/>
+        <result column="package_name" property="packageName"/>
+        <result column="price" property="price"/>
+        <result column="game_money" property="gameMoney"/>
+        <result column="pay_type" property="payType"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- save recharge_order -->
+    <insert id="save" parameterType="com.dollapi.domain.RechargeOrder">
+        insert into recharge_order (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{userId},
+        #{userName},
+        #{packageId},
+        #{packageName},
+        #{price},
+        #{gameMoney},
+        #{payType},
+        #{status}
+        )
+    </insert>
+
+    <!-- update recharge_order -->
+    <update id="update" parameterType="com.dollapi.domain.RechargeOrder">
+        UPDATE recharge_order
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="packageId != null">package_id = #{packageId},</if>
+            <if test="packageName != null">package_name = #{packageName},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="gameMoney != null">game_money = #{gameMoney},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

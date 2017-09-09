@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.OrderInfoMapper">
+    <!-- order_info query field-->
+    <sql id="columns">
+      id,
+      user_id,
+      user_name,
+      commodity_id,
+      commodity_name,
+      machine_id,
+      machine_name,
+      user_adress_id,
+      game_money_price,
+      status,
+      create_time
+	</sql>
+
+    <!-- order_info result map-->
+    <resultMap type="com.dollapi.domain.OrderInfo" id="OrderInfoMap">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="commodity_id" property="commodityId"/>
+        <result column="commodity_name" property="commodityName"/>
+        <result column="machine_id" property="machineId"/>
+        <result column="machine_name" property="machineName"/>
+        <result column="user_adress_id" property="userAdressId"/>
+        <result column="game_money_price" property="gameMoneyPrice"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save order_info -->
+    <insert id="save" parameterType="com.dollapi.domain.OrderInfo">
+        insert into order_info (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{userId},
+        #{userName},
+        #{commodityId},
+        #{commodityName},
+        #{machineId},
+        #{machineName},
+        #{userAdressId},
+        #{gameMoneyPrice},
+        #{status},
+        Now()
+        )
+    </insert>
+
+    <!-- update order_info -->
+    <update id="update" parameterType="com.dollapi.domain.OrderInfo">
+        UPDATE order_info
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="commodityId != null">commodity_id = #{commodityId},</if>
+            <if test="commodityName != null">commodity_name = #{commodityName},</if>
+            <if test="machineId != null">machine_id = #{machineId},</if>
+            <if test="machineName != null">machine_name = #{machineName},</if>
+            <if test="userAdressId != null">user_adress_id = #{userAdressId},</if>
+            <if test="gameMoneyPrice != null">game_money_price = #{gameMoneyPrice},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id= #{id}
+    </update>
+
+    <select id="selectById" parameterType="Long" resultMap="OrderInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM order_info WHERE order_info.id=#{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="OrderInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM order_info WHERE order_info.user_id=#{userId}
+    </select>
+
+</mapper>

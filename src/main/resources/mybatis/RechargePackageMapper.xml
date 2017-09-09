@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.RechargePackageMapper">
+    <!-- recharge_package query field-->
+    <sql id="columns">
+      id,
+      package_name,
+      package_url,
+      price,
+      game_money,
+      status,
+      create_time
+	</sql>
+
+    <!-- recharge_package result map-->
+    <resultMap type="com.dollapi.domain.RechargePackage" id="RechargePackageMap">
+        <id column="id" property="id"/>
+        <result column="package_name" property="packageName"/>
+        <result column="package_url" property="packageUrl"/>
+        <result column="price" property="price"/>
+        <result column="game_money" property="gameMoney"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save recharge_package -->
+    <insert id="save" parameterType="com.dollapi.domain.RechargePackage">
+        insert into recharge_package (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{packageName},
+        #{packageUrl},
+        #{price},
+        #{gameMoney},
+        #{status},
+        Now()
+        )
+    </insert>
+
+    <!-- update recharge_package -->
+    <update id="update" parameterType="com.dollapi.domain.RechargePackage">
+        UPDATE recharge_package
+        <set>
+            <if test="packageName != null">package_name = #{packageName},</if>
+            <if test="packageUrl != null">package_url = #{packageUrl},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="gameMoney != null">game_money = #{gameMoney},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+</mapper> 

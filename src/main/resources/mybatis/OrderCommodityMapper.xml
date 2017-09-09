@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.OrderCommodityMapper">
+    <!-- order_commodity query field-->
+    <sql id="columns">
+      id,
+      commodity_name,
+      commodity_type,
+      commodity_url,
+      game_money,
+      cost,
+      commodity_count,
+      introduce,
+      status,
+      create_time
+	</sql>
+
+    <!-- order_commodity result map-->
+    <resultMap type="com.dollapi.domain.OrderCommodity" id="OrderCommodityMap">
+        <id column="id" property="id"/>
+        <result column="commodity_name" property="commodityName"/>
+        <result column="commodity_type" property="commodityType"/>
+        <result column="commodity_url" property="commodityUrl"/>
+        <result column="game_money" property="gameMoney"/>
+        <result column="cost" property="cost"/>
+        <result column="commodity_count" property="commodityCount"/>
+        <result column="introduce" property="introduce"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save order_commodity -->
+    <insert id="save" parameterType="com.dollapi.domain.OrderCommodity">
+        insert into order_commodity (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{commodityName},
+        #{commodityType},
+        #{commodityUrl},
+        #{gameMoney},
+        #{cost},
+        #{commodityCount},
+        #{introduce},
+        #{status},
+        Now()
+        )
+    </insert>
+
+    <!-- update order_commodity -->
+    <update id="update" parameterType="com.dollapi.domain.OrderCommodity">
+        UPDATE order_commodity
+        <set>
+            <if test="commodityName != null">commodity_name = #{commodityName},</if>
+            <if test="commodityType != null">commodity_type = #{commodityType},</if>
+            <if test="commodityUrl != null">commodity_url = #{commodityUrl},</if>
+            <if test="gameMoney != null">game_money = #{gameMoney},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            <if test="commodityCount != null">commodity_count = #{commodityCount},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

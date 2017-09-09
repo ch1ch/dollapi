@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.UserAdressMapper">
+    <!-- user_adress query field-->
+    <sql id="columns">
+      id,
+      user_id,
+      person,
+      mobile,
+      address
+	</sql>
+
+    <!-- user_adress result map-->
+    <resultMap type="com.dollapi.domain.UserAdress" id="UserAdressMap">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="person" property="person"/>
+        <result column="mobile" property="mobile"/>
+        <result column="address" property="address"/>
+    </resultMap>
+
+    <!-- save user_adress -->
+    <insert id="save" parameterType="com.dollapi.domain.UserAdress">
+        insert into user_adress (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{userId},
+        #{person},
+        #{mobile},
+        #{address}
+        )
+    </insert>
+
+    <!-- update user_adress -->
+    <update id="update" parameterType="com.dollapi.domain.UserAdress">
+        UPDATE user_adress
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="person != null">person = #{person},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="address != null">address = #{address},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="UserAdressMap">
+        SELECT <include refid="columns"/> FROM user_adress WHERE user_adress.user_id=#{userId}
+    </select>
+
+
+</mapper> 

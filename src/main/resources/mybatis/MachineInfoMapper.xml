@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.MachineInfoMapper">
+    <!-- machine_info query field-->
+    <sql id="columns">
+      id,
+      machine_name,
+      introduce,
+      ip_address,
+      machine_img,
+      video_1,
+      video_2,
+      video_3,
+      game_money,
+      commodity_ids,
+      status
+	</sql>
+
+    <!-- machine_info result map-->
+    <resultMap type="com.dollapi.domain.MachineInfo" id="MachineInfoMap">
+        <result column="id" property="id"/>
+        <result column="machine_name" property="machineName"/>
+        <result column="introduce" property="introduce"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="machine_img" property="machineImg"/>
+        <result column="video_1" property="video1"/>
+        <result column="video_2" property="video2"/>
+        <result column="video_3" property="video3"/>
+        <result column="game_money" property="gameMoney"/>
+        <result column="commodity_ids" property="commodityIds"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- save machine_info -->
+    <insert id="save" parameterType="com.dollapi.domain.MachineInfo">
+        insert into machine_info (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{machineName},
+        #{introduce},
+        #{ipAddress},
+        #{machineImg},
+        #{video1},
+        #{video2},
+        #{video3},
+        #{gameMoney},
+        #{commodityIds},
+        #{status}
+        )
+    </insert>
+
+    <!-- update machine_info -->
+    <update id="update" parameterType="com.dollapi.domain.MachineInfo">
+        UPDATE machine_info
+        <set>
+            <if test="id != null">id = #{id},</if>
+            <if test="machineName != null">machine_name = #{machineName},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="machineImg != null">machine_img = #{machineImg},</if>
+            <if test="video1 != null">video_1 = #{video1},</if>
+            <if test="video2 != null">video_2 = #{video2},</if>
+            <if test="video3 != null">video_3 = #{video3},</if>
+            <if test="gameMoney != null">game_money = #{gameMoney},</if>
+            <if test="commodityIds != null">commodity_ids = #{commodityIds},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectAll" resultMap="MachineInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM machine_info
+    </select>
+
+    <select id="selectById" parameterType="Long" resultMap="MachineInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM machine_info WHERE machine_info.id=#{id}
+    </select>
+
+</mapper>
