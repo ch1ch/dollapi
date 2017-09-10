@@ -12,6 +12,7 @@ import com.dollapi.vo.WXUserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,13 +32,17 @@ public class UserService {
     @Autowired
     private UserAdressMapper userAdressMapper;
 
+    @Value("${com.doll.appid}")
+    private String appid;
+
+    @Value("${com.doll.secret}")
+    private String secret;
+
     public UserInfo WXLogin(String code) {
 
-        String appid = "";
-        String secret = "";
-//        WXUserInfo wxUserInfo = WXApi.getUserInfo(code, appid, secret);
-        WXUserInfo wxUserInfo = new WXUserInfo();
-        wxUserInfo.setUnionId("fanghexu123");
+        WXUserInfo wxUserInfo = WXApi.getUserInfo(code, appid, secret);
+//        WXUserInfo wxUserInfo = new WXUserInfo();
+//        wxUserInfo.setUnionId("fanghexu123");
         if (wxUserInfo.getUnionId() == null || wxUserInfo.getUnionId().equals("")) {
             throw new DollException(ApiContents.WX_USER_NULL.value(), ApiContents.WX_USER_NULL.desc());
         }
