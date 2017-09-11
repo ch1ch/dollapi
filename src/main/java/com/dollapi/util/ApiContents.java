@@ -12,7 +12,8 @@ public enum ApiContents {
     USER_GOME_MONEY_NULL(2002, "余额不足，请充值后再试"),
     MACHINE_USED(3001, "娃娃机不可用，稍后再试"),
     CREATE_ORDER_ERROR(4001, "创建订单失败"),
-    BACK_ORDER_ERROR(4002, "回调订单失败");
+    BACK_ORDER_ERROR(4002, "回调订单失败"),
+    PACKAGE_ERROR(4003, "无效的充值套餐");
 
     private Integer value;
     private String desc;

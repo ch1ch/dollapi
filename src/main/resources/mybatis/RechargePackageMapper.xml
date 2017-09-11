@@ -53,5 +53,16 @@
         WHERE id = #{id}
     </update>
 
+    <select id="selectAllPackage" resultMap="RechargePackageMap">
+        SELECT
+        <include refid="columns"/>
+        FROM recharge_package
+    </select>
+
+    <select id="selectById" parameterType="Long" resultMap="RechargePackageMap">
+        SELECT
+        <include refid="columns"/>
+        FROM recharge_package WHERE recharge_package.id=#{id} LIMIT 1
+    </select>
 
 </mapper> 

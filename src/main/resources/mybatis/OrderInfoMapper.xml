@@ -76,10 +76,13 @@
         FROM order_info WHERE order_info.id=#{id}
     </select>
 
-    <select id="selectByUserId" parameterType="Long" resultMap="OrderInfoMap">
+    <select id="selectByUserId" parameterType="Map" resultMap="OrderInfoMap">
         SELECT
         <include refid="columns"/>
         FROM order_info WHERE order_info.user_id=#{userId}
+        <if test="doll == 1">
+            AND order_info.status=3
+        </if>
     </select>
 
 </mapper>

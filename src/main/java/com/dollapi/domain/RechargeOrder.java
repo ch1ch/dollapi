@@ -43,6 +43,8 @@ public class RechargeOrder  {
 	*/
 	private Long gameMoney;
 
+	private String outPayOrder;
+
 	/**
 	*  
 	*/
@@ -52,7 +54,15 @@ public class RechargeOrder  {
 	*  
 	*/
 	private Integer status;
-	
+
+	public String getOutPayOrder() {
+		return outPayOrder;
+	}
+
+	public void setOutPayOrder(String outPayOrder) {
+		this.outPayOrder = outPayOrder;
+	}
+
 	public void setId(String id){
 		this.id = id;
 	}

@@ -13,6 +13,7 @@
       price,
       game_money,
       pay_type,
+      out_pay_order,
       status
 	</sql>
 
@@ -26,6 +27,7 @@
         <result column="price" property="price"/>
         <result column="game_money" property="gameMoney"/>
         <result column="pay_type" property="payType"/>
+        <result column="out_pay_order" property="outPayOrder"/>
         <result column="status" property="status"/>
     </resultMap>
 
@@ -42,6 +44,7 @@
         #{price},
         #{gameMoney},
         #{payType},
+        #{outPayOrder},
         #{status}
         )
     </insert>
@@ -58,10 +61,17 @@
             <if test="price != null">price = #{price},</if>
             <if test="gameMoney != null">game_money = #{gameMoney},</if>
             <if test="payType != null">pay_type = #{payType},</if>
+            <if test="outPayOrder != null">out_pay_order = #{outPayOrder},</if>
             <if test="status != null">status = #{status},</if>
         </set>
         WHERE id = #{id}
     </update>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="RechargeOrderMap">
+        SELECT
+        <include refid="columns"/>
+        FROM recharge_order WHERE recharge_order.user_id=#{userId}
+    </select>
 
 
 </mapper>

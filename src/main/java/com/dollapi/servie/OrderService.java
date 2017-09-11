@@ -1,20 +1,18 @@
 package com.dollapi.servie;
 
 import com.alibaba.fastjson.JSON;
-import com.dollapi.domain.MachineInfo;
-import com.dollapi.domain.OrderInfo;
-import com.dollapi.domain.UserInfo;
+import com.dollapi.domain.*;
 import com.dollapi.exception.DollException;
-import com.dollapi.mapper.MachineInfoMapper;
-import com.dollapi.mapper.OrderInfoMapper;
-import com.dollapi.mapper.UserInfoMapper;
+import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service("orderService")
@@ -29,6 +27,12 @@ public class OrderService {
 
     @Autowired
     private OrderInfoMapper orderInfoMapper;
+
+    @Autowired
+    private RechargeOrderMapper rechargeOrderMapper;
+
+    @Autowired
+    private RechargePackageMapper rechargePackageMapper;
 
     public void createOrder(UserInfo userInfo, Long machineId) {
 
@@ -100,9 +104,44 @@ public class OrderService {
 
     }
 
-    public List<OrderInfo> getOrderList(Long userId) {
-        List<OrderInfo> list = orderInfoMapper.selectByUserId(userId);
+    public List<OrderInfo> getOrderList(Long userId, Integer doll) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("doll", doll);
+        List<OrderInfo> list = orderInfoMapper.selectByUserId(params);
         return list;
+    }
+
+    public List<RechargePackage> getRechargePackage() {
+        List<RechargePackage> list = rechargePackageMapper.selectAllPackage();
+        return list;
+    }
+
+    public List<RechargeOrder> getRechargeOrderByUserId(Long userId) {
+        List<RechargeOrder> list = rechargeOrderMapper.selectByUserId(userId);
+        return list;
+    }
+
+    public void recharge(UserInfo user, Long packageId, Integer payType, String outPayOrder) {
+        RechargePackage p = rechargePackageMapper.selectById(packageId);
+        if (p == null || p.getId() == null) {
+            throw new DollException(ApiContents.PACKAGE_ERROR.value(), ApiContents.PACKAGE_ERROR.desc());
+        }
+        RechargeOrder order = new RechargeOrder();
+        order.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+        order.setUserId(user.getId());
+        order.setUserName(user.getNickName());
+        order.setPackageId(p.getId());
+        order.setPackageName(p.getPackageName());
+        order.setPrice(p.getPrice());
+        order.setGameMoney(p.getGameMoney());
+        order.setOutPayOrder(outPayOrder);
+        // FIXME: 2017/9/11 这里使用枚举 1微信 2支付宝
+        order.setPayType(payType);
+        order.setStatus(1);
+        rechargeOrderMapper.save(order);
+        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
+        userInfoMapper.update(user);
     }
 
 
