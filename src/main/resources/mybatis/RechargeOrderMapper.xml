@@ -14,6 +14,7 @@
       game_money,
       pay_type,
       out_pay_order,
+      create_time,
       status
 	</sql>
 
@@ -28,6 +29,7 @@
         <result column="game_money" property="gameMoney"/>
         <result column="pay_type" property="payType"/>
         <result column="out_pay_order" property="outPayOrder"/>
+        <result column="create_time" property="createTime"/>
         <result column="status" property="status"/>
     </resultMap>
 
@@ -45,6 +47,7 @@
         #{gameMoney},
         #{payType},
         #{outPayOrder},
+        NOW(),
         #{status}
         )
     </insert>

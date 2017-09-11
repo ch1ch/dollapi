@@ -1,6 +1,9 @@
 package com.dollapi.domain;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class RechargeOrder  {
 
@@ -49,6 +52,8 @@ public class RechargeOrder  {
 	*  
 	*/
 	private Integer payType;
+
+	private Date createTime;
 
 	/**
 	*  
@@ -133,5 +138,14 @@ public class RechargeOrder  {
 	
 	public Integer getStatus(){
 		return status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 }
