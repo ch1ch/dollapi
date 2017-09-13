@@ -70,7 +70,7 @@
         WHERE id= #{id}
     </update>
 
-    <select id="selectById" parameterType="Long" resultMap="OrderInfoMap">
+    <select id="selectById" parameterType="String" resultMap="OrderInfoMap">
         SELECT
         <include refid="columns"/>
         FROM order_info WHERE order_info.id=#{id}
