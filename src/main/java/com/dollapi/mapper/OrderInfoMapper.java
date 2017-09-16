@@ -15,7 +15,7 @@ public interface OrderInfoMapper {
 
     public void update(OrderInfo orderInfo);
 
-    public OrderInfo selectById(Long id);
+    public OrderInfo selectById(String id);
 
     public List<OrderInfo> selectByUserId(Map<String, Object> params);
 

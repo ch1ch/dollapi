@@ -1,15 +1,23 @@
 package com.dollapi.servie;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dollapi.domain.*;
 import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +71,26 @@ public class OrderService {
             userInfoMapper.update(userInfo);
             machineInfoMapper.update(machineInfo);
             orderInfoMapper.save(orderInfo);
+
+            String url = machineInfo.getIpAddress() + "/start?userId=" + userInfo.getId().toString() + "&orderId=" + orderInfo.getId();
+            CloseableHttpClient httpclient = HttpClients.createDefault();
+            HttpGet httppost = new HttpGet(url);
+            try {
+                CloseableHttpResponse response = httpclient.execute(httppost);
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    String responseText = EntityUtils.toString(entity, "UTF-8");
+                    JSONObject dataObject = JSON.parseObject(responseText);
+                    if (!dataObject.get("code").equals("200")) {
+                        logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
+                        throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
+                    }
+                }
+            } catch (IOException y) {
+                logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
+                y.printStackTrace();
+                throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
+            }
         } catch (Exception e) {
             if (e instanceof DollException) {
                 throw e;
@@ -76,7 +104,7 @@ public class OrderService {
 
     }
 
-    public void callBack(UserInfo userInfo, Long machineId, Long orderId, Integer result) {
+    public void callBack(UserInfo userInfo, Long machineId, String orderId, Integer result) {
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
             // FIXME: 2017/9/10 这里用枚举
