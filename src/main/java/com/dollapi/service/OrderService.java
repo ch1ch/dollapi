@@ -1,4 +1,4 @@
-package com.dollapi.servie;
+package com.dollapi.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

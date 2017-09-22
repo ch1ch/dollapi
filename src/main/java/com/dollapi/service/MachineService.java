@@ -1,4 +1,4 @@
-package com.dollapi.servie;
+package com.dollapi.service;
 
 import com.dollapi.domain.MachineInfo;
 import com.dollapi.mapper.MachineInfoMapper;

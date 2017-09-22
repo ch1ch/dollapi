@@ -2,7 +2,7 @@ package com.dollapi.controller;
 
 import com.dollapi.domain.UserAdress;
 import com.dollapi.domain.UserInfo;
-import com.dollapi.servie.UserService;
+import com.dollapi.service.UserService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import org.springframework.beans.factory.annotation.Autowired;

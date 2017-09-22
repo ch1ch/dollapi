@@ -3,6 +3,8 @@ package com.dollapi.mapper;
 import com.dollapi.domain.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 
 @Mapper
 public interface UserInfoMapper {
@@ -17,4 +19,8 @@ public interface UserInfoMapper {
 
     public UserInfo selectByToken(String token);
 
+
+//    ============================UI===================================
+
+    List<UserInfo> selectAllUser();
 }

@@ -1,7 +1,7 @@
 package com.dollapi.controller;
 
 import com.dollapi.domain.MachineInfo;
-import com.dollapi.servie.MachineService;
+import com.dollapi.service.MachineService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -85,4 +85,8 @@
         SELECT <include refid="columns"/> FROM user_info WHERE user_info.token=#{token}
     </select>
 
+    <select id="selectAllUser" resultMap="UserInfoMap">
+        SELECT <include refid="columns"/> FROM user_info
+    </select>
+
 </mapper> 
