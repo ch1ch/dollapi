@@ -5,7 +5,9 @@ import com.dollapi.domain.UserInfo;
 import com.dollapi.service.UserService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.util.TLSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,15 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Value("${tls.sdkappid}")
+    private Long sdkAppId;
+
+    @Value("${tls.publickey}")
+    private String publickey;
+
+    @Value("${tls.privatekey}")
+    private String privatekey;
 
     @RequestMapping("/wxLogin")
     public Results wxLogin(HttpServletRequest request) {
@@ -49,6 +60,14 @@ public class UserController extends BaseController {
         validParamsNotNull(token);
         List<UserAdress> list = userService.getUserAddressList(getUserInfo(token).getId());
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), list);
+    }
+
+    @RequestMapping("/getLTSSig")
+    public Results getLTSSig(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        validParamsNotNull(token);
+        String sig = TLSUtil.getSig("user" + getUserInfo(token).getId().toString(), privatekey, publickey, sdkAppId);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), sig);
     }
 
 

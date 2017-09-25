@@ -3,6 +3,7 @@ package com.dollapi.util;
 import java.security.PublicKey;
 import java.security.Security;
 
+import com.dollapi.exception.DollException;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -293,6 +294,41 @@ public class TLSUtil {
         }
 
         return result;
+    }
+
+
+    public static String getSig(String identifier, String privStr, String pubStr, Long sdkAppId) {
+
+        privStr = "-----BEGIN PRIVATE KEY-----\n" +
+                "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgUXvcxF68hZW6HEUYGgmE\n" +
+                "h/LXRCRAtWwrIijiPus34BOhRANCAATiRpBvJzUsnq7dyhTwfUr8qtBNj72Y0iN9\n" +
+                "HZTZY+3j7VOsc/ANKKw2YseqGddvHcjpFAu+TD3S2UM5uz+NrnV9\n" +
+                "-----END PRIVATE KEY-----\n";
+
+        //change public pem string to public string
+        pubStr = "-----BEGIN PUBLIC KEY-----\n" +
+                "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE4kaQbyc1LJ6u3coU8H1K/KrQTY+9mNIj\n" +
+                "fR2U2WPt4+1TrHPwDSisNmLHqhnXbx3I6RQLvkw90tlDObs/ja51fQ==\n" +
+                "-----END PUBLIC KEY-----\n";
+
+        try {
+            GenTLSSignatureResult result = GenTLSSignatureEx(sdkAppId, identifier, privStr);
+            if (0 == result.urlSig.length()) {
+                System.out.println("GenTLSSignatureEx failed: " + result.errMessage);
+                throw new DollException(ApiContents.LTS_ERROR.value(), ApiContents.LTS_ERROR.desc() + result.errMessage);
+            }
+
+            CheckTLSSignatureResult checkResult = CheckTLSSignatureEx(result.urlSig, sdkAppId, identifier, pubStr);
+            if (checkResult.verifyResult == false) {
+                System.out.println("CheckTLSSignature failed: " + result.errMessage);
+                throw new DollException(ApiContents.LTS_ERROR.value(), ApiContents.LTS_ERROR.desc() + result.errMessage);
+            }
+            System.out.println("---\ngenerate sig:\n" + result.urlSig + "\n---\n");
+            return result.urlSig;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DollException(ApiContents.LTS_ERROR.value(), ApiContents.LTS_ERROR.desc());
+        }
     }
 
 

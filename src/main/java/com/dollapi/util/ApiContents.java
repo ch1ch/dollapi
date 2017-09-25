@@ -13,7 +13,8 @@ public enum ApiContents {
     MACHINE_USED(3001, "娃娃机不可用，稍后再试"),
     CREATE_ORDER_ERROR(4001, "创建订单失败"),
     BACK_ORDER_ERROR(4002, "回调订单失败"),
-    PACKAGE_ERROR(4003, "无效的充值套餐");
+    PACKAGE_ERROR(4003, "无效的充值套餐"),
+    LTS_ERROR(5001, "LTS错误");
 
     private Integer value;
     private String desc;
