@@ -8,6 +8,9 @@
       id,
       machine_name,
       introduce,
+      doll_name,
+      doll_introduce,
+      doll_img,
       ip_address,
       machine_img,
       video_1,
@@ -23,6 +26,9 @@
         <result column="id" property="id"/>
         <result column="machine_name" property="machineName"/>
         <result column="introduce" property="introduce"/>
+        <result column="doll_name" property="dollName"/>
+        <result column="doll_introduce" property="dollIntroduce"/>
+        <result column="doll_img" property="dollImg"/>
         <result column="ip_address" property="ipAddress"/>
         <result column="machine_img" property="machineImg"/>
         <result column="video_1" property="video1"/>
@@ -41,6 +47,9 @@
         #{id},
         #{machineName},
         #{introduce},
+        #{dollName},
+        #{dollIntroduce},
+        #{dollImg},
         #{ipAddress},
         #{machineImg},
         #{video1},

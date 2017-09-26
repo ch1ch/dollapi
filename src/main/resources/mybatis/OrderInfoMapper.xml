@@ -14,6 +14,10 @@
       machine_name,
       user_adress_id,
       game_money_price,
+      doll_name,
+      doll_introduce,
+      doll_img,
+      game_video,
       status,
       create_time
 	</sql>
@@ -29,6 +33,10 @@
         <result column="machine_name" property="machineName"/>
         <result column="user_adress_id" property="userAdressId"/>
         <result column="game_money_price" property="gameMoneyPrice"/>
+        <result column="doll_name" property="dollName"/>
+        <result column="doll_introduce" property="dollIntroduce"/>
+        <result column="doll_img" property="dollImg"/>
+        <result column="game_video" property="gameVideo"/>
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
@@ -47,6 +55,10 @@
         #{machineName},
         #{userAdressId},
         #{gameMoneyPrice},
+        #{dollName},
+        #{dollIntroduce},
+        #{dollImg},
+        #{gameVideo},
         #{status},
         Now()
         )

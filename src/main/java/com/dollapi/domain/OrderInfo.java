@@ -46,6 +46,14 @@ public class OrderInfo {
      */
     private Long gameMoneyPrice;
 
+    private String dollName;
+
+    private String dollIntroduce;
+
+    private String dollImg;
+
+    private String gameVideo;
+
     /**
      * 1为初始，游戏中，已经付款，2为抓取失败，3为抓取成功
      */
@@ -144,5 +152,37 @@ public class OrderInfo {
 
     public void setMachineName(String machineName) {
         this.machineName = machineName;
+    }
+
+    public String getDollName() {
+        return dollName;
+    }
+
+    public void setDollName(String dollName) {
+        this.dollName = dollName;
+    }
+
+    public String getDollIntroduce() {
+        return dollIntroduce;
+    }
+
+    public void setDollIntroduce(String dollIntroduce) {
+        this.dollIntroduce = dollIntroduce;
+    }
+
+    public String getDollImg() {
+        return dollImg;
+    }
+
+    public void setDollImg(String dollImg) {
+        this.dollImg = dollImg;
+    }
+
+    public String getGameVideo() {
+        return gameVideo;
+    }
+
+    public void setGameVideo(String gameVideo) {
+        this.gameVideo = gameVideo;
     }
 }

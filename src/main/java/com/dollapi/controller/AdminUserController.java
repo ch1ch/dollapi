@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,13 +29,23 @@ public class AdminUserController {
     private UserInfoMapper userInfoMapper;
 
     @RequestMapping("/userList")
-    public String userList(ModelMap map) {
-        map.addAttribute("test", "哈哈哈哈哈");
-
-        PageHelper.startPage(1, 3);
-        List<UserInfo> list=userInfoMapper.selectAllUser();
+    public String userList(ModelMap map, HttpServletRequest request) {
+        String page = request.getParameter("page");
+        PageHelper.startPage(Integer.valueOf(page), 3);
+        List<UserInfo> list = userInfoMapper.selectAllUser();
         PageInfo pageInfo = new PageInfo(list);
+
+        List<String> numbers = new ArrayList<>();
+        for (int i = 1; i <= pageInfo.getPages(); i++) {
+            numbers.add(String.valueOf(i));
+        }
+
         map.addAttribute("list", pageInfo.getList());
+        map.addAttribute("pageNum", pageInfo.getPageNum());
+        map.addAttribute("nextPage", pageInfo.getNextPage());
+        map.addAttribute("prePage", pageInfo.getPrePage());
+        map.addAttribute("numbers", numbers);
+
         return "userList";
     }
 
