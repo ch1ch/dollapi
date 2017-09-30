@@ -1,8 +1,7 @@
 package com.dollapi.controller;
 
-import com.dollapi.domain.UserInfo;
-import com.dollapi.mapper.UserInfoMapper;
-import com.github.pagehelper.Page;
+import com.dollapi.domain.MachineInfo;
+import com.dollapi.mapper.MachineInfoMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +17,24 @@ import java.util.List;
  * <p>Copyright: All Rights Reserved</p>
  * <p>Company: 指点无限(北京)科技有限公司   http://www.zhidianwuxian.cn</p>
  * <p>Description:  </p>
- * <p>Author:hexu/方和煦, 2017/9/22</p>
+ * <p>Author:hexu/方和煦, 2017/9/30</p>
  */
 
 @Controller
-@RequestMapping("/admin/user")
-public class AdminUserController {
+@RequestMapping("/admin/machine")
+public class AdminMachineController {
 
     @Autowired
-    private UserInfoMapper userInfoMapper;
+    private MachineInfoMapper machineInfoMapper;
 
-    @RequestMapping("/userList")
-    public String userList(ModelMap map, HttpServletRequest request) {
+    @RequestMapping("/getMachineList")
+    public String getMachineList(ModelMap map, HttpServletRequest request){
         String page = request.getParameter("page");
         if(page==null){
             page="1";
         }
         PageHelper.startPage(Integer.valueOf(page), 3);
-        List<UserInfo> list = userInfoMapper.selectAllUser();
+        List<MachineInfo> list=machineInfoMapper.selectAll();
         PageInfo pageInfo = new PageInfo(list);
 
         List<String> numbers = new ArrayList<>();
@@ -49,7 +48,7 @@ public class AdminUserController {
         map.addAttribute("prePage", pageInfo.getPrePage());
         map.addAttribute("numbers", numbers);
 
-        return "userList";
+        return "machineList";
     }
 
 }
