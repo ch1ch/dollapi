@@ -3,6 +3,7 @@ package com.dollapi.controller;
 import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
+import com.dollapi.domain.UserInfo;
 import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
@@ -25,8 +26,8 @@ public class OrderController extends BaseController {
         String token = request.getParameter("token");
         Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId").toString());
         validParamsNotNull(token, machineId);
-        orderService.createOrder(getUserInfo(token), machineId);
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        String orderId = orderService.createOrder(getUserInfo(token), machineId);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), orderId);
     }
 
     @RequestMapping("/getUserOrder")
@@ -60,6 +61,17 @@ public class OrderController extends BaseController {
         String outPayOrder = request.getParameter("outPayOrder");
         validParamsNotNull(token, packageId, payType, outPayOrder);
         orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/callBack")
+    public Results callBack(HttpServletRequest request) {
+        Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId").toString());
+        String orderId = request.getParameter("orderId") == null ? null : request.getParameter("orderId").toString();
+        Integer result = request.getParameter("result") == null ? null : Integer.valueOf(request.getParameter("result").toString());
+        String token = request.getParameter("token");
+        UserInfo user = getUserInfo(token);
+        orderService.callBack(user, machineId, orderId, result);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 

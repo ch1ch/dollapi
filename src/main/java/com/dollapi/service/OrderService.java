@@ -6,6 +6,7 @@ import com.dollapi.domain.*;
 import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
+import com.dollapi.util.Results;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -42,7 +43,9 @@ public class OrderService {
     @Autowired
     private RechargePackageMapper rechargePackageMapper;
 
-    public void createOrder(UserInfo userInfo, Long machineId) {
+    public String createOrder(UserInfo userInfo, Long machineId) {
+
+        String orderId = UUID.randomUUID().toString().replaceAll("-", "");
 
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
@@ -57,7 +60,7 @@ public class OrderService {
             }
 
             OrderInfo orderInfo = new OrderInfo();
-            orderInfo.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            orderInfo.setId(orderId);
             orderInfo.setUserId(userInfo.getId());
             orderInfo.setUserName(userInfo.getNickName());
             orderInfo.setMachineId(machineId);
@@ -86,6 +89,7 @@ public class OrderService {
                         throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
                     }
                 }
+                return orderId;
             } catch (IOException y) {
                 logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
                 y.printStackTrace();
