@@ -147,15 +147,15 @@ public class base64_url {
         }
         return Arrays.copyOfRange(out_str, 0, j);
     }
-    public static void main(String[] args) throws DecoderException {
-
-        //String hexString = "5095";
-        String hexString = "789c6d8d4d4f83401884ff0b578c5dba0bbb98782015b1a1f8059a7222743fc8da96aecbdbdad6f8dfa5046fce6de6c9cc7c3bc522bfeec4baaa8dd1c2b9713c822e0a7ddfb91aa03c1a6d65552b90b6e794d2a0e7231c5a550d15b6ff96416fe590e38051c2281d732d640b5ae96172ea051c29be524c62e463e57382e854a08020a578c8febe38dfed5ba8e0642e9b98e21174bae97d16bfcde633299e0f49c81f27a26490b97665d7675dd0fdc35df1de994d23bc4301db349fbb918ea3e36b509878f7956d84dbb44b4ed23287b454f7119c12fea4968b64927d7c962179b9757e7e01ed1059d9";
-
-        byte [] test = Hex.decodeHex(hexString.toCharArray());
-        byte [] compressBytes = base64EncodeUrl(test);
-        System.out.println("compress : " + new String(compressBytes));
-        byte [] uncompressBytes = base64DecodeUrl(compressBytes);
-        System.out.println("uncompress: " + Hex.encodeHexString(uncompressBytes));
-    }
+//    public static void main(String[] args) throws DecoderException {
+//
+//        //String hexString = "5095";
+//        String hexString = "789c6d8d4d4f83401884ff0b578c5dba0bbb98782015b1a1f8059a7222743fc8da96aecbdbdad6f8dfa5046fce6de6c9cc7c3bc522bfeec4baaa8dd1c2b9713c822e0a7ddfb91aa03c1a6d65552b90b6e794d2a0e7231c5a550d15b6ff96416fe590e38051c2281d732d640b5ae96172ea051c29be524c62e463e57382e854a08020a578c8febe38dfed5ba8e0642e9b98e21174bae97d16bfcde633299e0f49c81f27a26490b97665d7675dd0fdc35df1de994d23bc4301db349fbb918ea3e36b509878f7956d84dbb44b4ed23287b454f7119c12fea4968b64927d7c962179b9757e7e01ed1059d9";
+//
+//        byte [] test = Hex.decodeHex(hexString.toCharArray());
+//        byte [] compressBytes = base64EncodeUrl(test);
+//        System.out.println("compress : " + new String(compressBytes));
+//        byte [] uncompressBytes = base64DecodeUrl(compressBytes);
+//        System.out.println("uncompress: " + Hex.encodeHexString(uncompressBytes));
+//    }
 }

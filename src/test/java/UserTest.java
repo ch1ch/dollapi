@@ -4,6 +4,7 @@ import com.dollapi.domain.UserThird;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.mapper.UserThirdMapper;
 
+import com.dollapi.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserTest {
     @Autowired
     private UserInfoMapper userInfoMapper;
 
+    @Autowired
+    private UserService userService;
+
     @Test
 //    @Rollback
     public void findByName() throws Exception {
@@ -38,6 +42,11 @@ public class UserTest {
         Long v=Long.valueOf(aa.split("-")[1]);
 
         System.out.println(1);
+    }
+
+    @Test
+    public void updateImage(){
+        userService.getWXImage("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png","asdf","");
     }
 
 

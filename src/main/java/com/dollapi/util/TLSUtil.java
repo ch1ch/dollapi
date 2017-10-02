@@ -332,53 +332,53 @@ public class TLSUtil {
     }
 
 
-    public static void main(String[] args) {
-        try {
-            //Use pemfile keys to test
+//    public static void main(String[] args) {
+//        try {
+//            //Use pemfile keys to test
+////            String privStr = "-----BEGIN PRIVATE KEY-----\n" +
+////                    "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgiBPYMVTjspLfqoq46oZd\n" +
+////                    "j9A0C8p7aK3Fi6/4zLugCkehRANCAATU49QhsAEVfIVJUmB6SpUC6BPaku1g/dzn\n" +
+////                    "0Nl7iIY7W7g2FoANWnoF51eEUb6lcZ3gzfgg8VFGTpJriwHQWf5T\n" +
+////                    "-----END PRIVATE KEY-----";
+////
+////            //change public pem string to public string
+////            String pubStr = "-----BEGIN PUBLIC KEY-----\n"+
+////                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE1OPUIbABFXyFSVJgekqVAugT2pLtYP3c\n"+
+////                    "59DZe4iGO1u4NhaADVp6BedXhFG+pXGd4M34IPFRRk6Sa4sB0Fn+Uw==\n"+
+////                    "-----END PUBLIC KEY-----";
+//
 //            String privStr = "-----BEGIN PRIVATE KEY-----\n" +
-//                    "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgiBPYMVTjspLfqoq46oZd\n" +
-//                    "j9A0C8p7aK3Fi6/4zLugCkehRANCAATU49QhsAEVfIVJUmB6SpUC6BPaku1g/dzn\n" +
-//                    "0Nl7iIY7W7g2FoANWnoF51eEUb6lcZ3gzfgg8VFGTpJriwHQWf5T\n" +
-//                    "-----END PRIVATE KEY-----";
+//                    "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgUXvcxF68hZW6HEUYGgmE\n" +
+//                    "h/LXRCRAtWwrIijiPus34BOhRANCAATiRpBvJzUsnq7dyhTwfUr8qtBNj72Y0iN9\n" +
+//                    "HZTZY+3j7VOsc/ANKKw2YseqGddvHcjpFAu+TD3S2UM5uz+NrnV9\n" +
+//                    "-----END PRIVATE KEY-----\n";
 //
 //            //change public pem string to public string
-//            String pubStr = "-----BEGIN PUBLIC KEY-----\n"+
-//                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE1OPUIbABFXyFSVJgekqVAugT2pLtYP3c\n"+
-//                    "59DZe4iGO1u4NhaADVp6BedXhFG+pXGd4M34IPFRRk6Sa4sB0Fn+Uw==\n"+
-//                    "-----END PUBLIC KEY-----";
-
-            String privStr = "-----BEGIN PRIVATE KEY-----\n" +
-                    "MIGEAgEAMBAGByqGSM49AgEGBSuBBAAKBG0wawIBAQQgUXvcxF68hZW6HEUYGgmE\n" +
-                    "h/LXRCRAtWwrIijiPus34BOhRANCAATiRpBvJzUsnq7dyhTwfUr8qtBNj72Y0iN9\n" +
-                    "HZTZY+3j7VOsc/ANKKw2YseqGddvHcjpFAu+TD3S2UM5uz+NrnV9\n" +
-                    "-----END PRIVATE KEY-----\n";
-
-            //change public pem string to public string
-            String pubStr = "-----BEGIN PUBLIC KEY-----\n" +
-                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE4kaQbyc1LJ6u3coU8H1K/KrQTY+9mNIj\n" +
-                    "fR2U2WPt4+1TrHPwDSisNmLHqhnXbx3I6RQLvkw90tlDObs/ja51fQ==\n" +
-                    "-----END PUBLIC KEY-----\n";
-
-            // generate signature
-//            GenTLSSignatureResult result = GenTLSSignatureEx(1400000955, "xiaojun", privStr);
-            GenTLSSignatureResult result = GenTLSSignatureEx(1400043428, "admin", privStr);
-            if (0 == result.urlSig.length()) {
-                System.out.println("GenTLSSignatureEx failed: " + result.errMessage);
-                return;
-            }
-
-            System.out.println("---\ngenerate sig:\n" + result.urlSig + "\n---\n");
-
-            // check signature
-            CheckTLSSignatureResult checkResult = CheckTLSSignatureEx(result.urlSig, 1400043428, "admin", pubStr);
-            if (checkResult.verifyResult == false) {
-                System.out.println("CheckTLSSignature failed: " + result.errMessage);
-                return;
-            }
-
-            System.out.println("\n---\ncheck sig ok -- expire time " + checkResult.expireTime + " -- init time " + checkResult.initTime + "\n---\n");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//            String pubStr = "-----BEGIN PUBLIC KEY-----\n" +
+//                    "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE4kaQbyc1LJ6u3coU8H1K/KrQTY+9mNIj\n" +
+//                    "fR2U2WPt4+1TrHPwDSisNmLHqhnXbx3I6RQLvkw90tlDObs/ja51fQ==\n" +
+//                    "-----END PUBLIC KEY-----\n";
+//
+//            // generate signature
+////            GenTLSSignatureResult result = GenTLSSignatureEx(1400000955, "xiaojun", privStr);
+//            GenTLSSignatureResult result = GenTLSSignatureEx(1400043428, "admin", privStr);
+//            if (0 == result.urlSig.length()) {
+//                System.out.println("GenTLSSignatureEx failed: " + result.errMessage);
+//                return;
+//            }
+//
+//            System.out.println("---\ngenerate sig:\n" + result.urlSig + "\n---\n");
+//
+//            // check signature
+//            CheckTLSSignatureResult checkResult = CheckTLSSignatureEx(result.urlSig, 1400043428, "admin", pubStr);
+//            if (checkResult.verifyResult == false) {
+//                System.out.println("CheckTLSSignature failed: " + result.errMessage);
+//                return;
+//            }
+//
+//            System.out.println("\n---\ncheck sig ok -- expire time " + checkResult.expireTime + " -- init time " + checkResult.initTime + "\n---\n");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

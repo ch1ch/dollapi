@@ -8,6 +8,7 @@ import com.dollapi.mapper.UserAdressMapper;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.mapper.UserThirdMapper;
 import com.dollapi.util.ApiContents;
+import com.dollapi.util.ImageUploadTools;
 import com.dollapi.vo.WXUserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +39,8 @@ public class UserService {
 
     @Autowired
     private UserAdressMapper userAdressMapper;
+
+    private static final String USER_HEAD_IMAGE_PATH = "data/head/";
 
     @Value("${com.doll.appid}")
     private String appid;
@@ -55,7 +65,9 @@ public class UserService {
             userInfo.setDollCount(0L);
             userInfo.setUserPoint(0L);
             userInfo.setUserLevel(1);
-            userInfo.setGameMoney(0L);
+            // FIXME: 2017/10/2 100注册活动
+            userInfo.setGameMoney(100L);
+            userInfo.setHeadUrl(getWXImage(wxUserInfo.getHeadImgUrl(), UUID.randomUUID().toString().replaceAll("-", ""), ""));
             userInfoMapper.save(userInfo);
 
             UserThird userThird = new UserThird();
@@ -87,6 +99,33 @@ public class UserService {
             userInfoMapper.update(userInfo);
         }
 
+    }
+
+    public String getWXImage(String urlString, String phone, String fileName) {
+        InputStream is = null;
+        String headingUrl = null;
+        try {
+            URL url = new URL(urlString);
+            URLConnection con = url.openConnection();
+            con.setConnectTimeout(10 * 1000);
+            is = con.getInputStream();
+            byte[] tmp = new byte[1024];
+            int length;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+
+            while ((length = is.read(tmp)) != -1) {
+                baos.write(tmp, 0, length);
+            }
+
+
+            headingUrl = ImageUploadTools.uploadQrFile(phone + ".jpg", new ByteArrayInputStream(baos.toByteArray()), USER_HEAD_IMAGE_PATH);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return headingUrl;
     }
 
 }
