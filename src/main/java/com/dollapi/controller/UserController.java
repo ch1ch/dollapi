@@ -70,5 +70,13 @@ public class UserController extends BaseController {
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), sig);
     }
 
+    @RequestMapping("/getUserInfo")
+    public Results getUserInfo(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        validParamsNotNull(token);
+        UserInfo user = getUserInfo(token);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), user);
+    }
+
 
 }
