@@ -75,7 +75,7 @@ public class OrderService {
             machineInfoMapper.update(machineInfo);
             orderInfoMapper.save(orderInfo);
 
-            String url = machineInfo.getIpAddress() + "/start?userId=" + userInfo.getId().toString() + "&orderId=" + orderInfo.getId();
+            String url = machineInfo.getIpAddress() + "/start?token=" + userInfo.getToken() + "&orderId=" + orderInfo.getId();
             CloseableHttpClient httpclient = HttpClients.createDefault();
             HttpGet httppost = new HttpGet(url);
             try {
@@ -117,7 +117,7 @@ public class OrderService {
 
             OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
             // FIXME: 2017/9/10 这里使用枚举
-            if (result == 1) {
+            if (result == 3) {
                 //抓到
                 orderInfo.setStatus(3);
             } else {

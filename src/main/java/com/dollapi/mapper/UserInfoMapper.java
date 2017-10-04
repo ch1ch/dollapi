@@ -23,4 +23,6 @@ public interface UserInfoMapper {
 //    ============================UI===================================
 
     List<UserInfo> selectAllUser();
+
+    UserInfo selectUserById(Long userId);
 }

@@ -51,4 +51,5 @@ public class AdminMachineController {
         return "machineList";
     }
 
+
 }

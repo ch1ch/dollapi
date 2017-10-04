@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<nav class="nav navbar-inverse navbar-fixed-top" role="navgation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav nav">
+                <li><a href="#">首页</a></li>
+                <li class="active"><a href="/admin/user/userList">用户列表</a></li>
+                <li><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li><a href="#">订单列表</a></li>
+            </ul>
+        ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
+        ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
+        ##                <button class="btn btn-success" style="margin-right: 30px;">搜索</button>
+        ##                <a href="#" class="navbar-link">注册</a>
+        ##                <a href="#" class="navbar-link">登录 </a>
+        ##            </div>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="form-group">
+        <label for="exampleInputEmail1">编号</label>
+        <input id="id" name="id" type="text" value="$user.id"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">昵称</label>
+        <input id="nickName" name="nickName" type="text" value="$user.nickName"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">等级</label>
+        <input id="userLevel" name="userLevel" type="text" value="$user.userLevel"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">手机号码</label>
+        <input id="phoneNumber" name="phoneNumber" type="text" value="$user.phoneNumber"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">积分</label>
+        <input id="userPoint" name="userPoint" type="text" value="$user.userPoint"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">游戏币</label>
+        <input id="gameMoney" name="gameMoney" type="text" value="$user.gameMoney"/>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">注册时间</label>
+        <input id="createTime" name="createTime" type="text"
+               value="$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)"/>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button type="submit" class="btn btn-default" onclick="updateUser()">保存</button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+    function updateUser() {
+        $.ajax({
+            type: "POST",
+            data: {id: 1},
+            url: "/admin/user/updateUserInfo",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+            }
+        });
+    }
+</script>
