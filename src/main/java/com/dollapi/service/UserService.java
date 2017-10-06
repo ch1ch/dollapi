@@ -10,6 +10,9 @@ import com.dollapi.mapper.UserThirdMapper;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.ImageUploadTools;
 import com.dollapi.vo.WXUserInfo;
+import com.wilddog.client.*;
+import com.wilddog.wilddogcore.WilddogApp;
+import com.wilddog.wilddogcore.WilddogOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +51,31 @@ public class UserService {
 
     @Value("${com.doll.secret}")
     private String secret;
+
+//    public UserService() {
+//        WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
+//        WilddogApp.initializeApp(options);
+//        SyncReference ref = WilddogSync.getInstance().getReference();
+//        ref.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.getValue() != null) {
+//                    logger.info("onDataChange", dataSnapshot.toString());
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(SyncError syncError) {
+//                if (syncError != null) {
+//                    logger.info("onCancelled", syncError.toString());
+//                }
+//            }
+//        });
+//
+//        logger.info("okokokokokokok");
+//
+//    }
 
     public UserInfo WXLogin(String code) {
 

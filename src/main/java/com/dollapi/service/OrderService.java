@@ -7,6 +7,11 @@ import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.vo.UserLine;
+import com.wilddog.client.SyncReference;
+import com.wilddog.client.WilddogSync;
+import com.wilddog.wilddogcore.WilddogApp;
+import com.wilddog.wilddogcore.WilddogOptions;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,10 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service("orderService")
 public class OrderService {
@@ -43,12 +45,17 @@ public class OrderService {
     @Autowired
     private RechargePackageMapper rechargePackageMapper;
 
+    private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
+
+    private static boolean inGame = true;
+
     public String createOrder(UserInfo userInfo, Long machineId) {
 
         String orderId = UUID.randomUUID().toString().replaceAll("-", "");
 
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
+            isUserLine(userInfo.getId(), machineInfo);
             // FIXME: 2017/9/10 这里用枚举
             if (machineInfo.getStatus().equals(2)) {
                 throw new DollException(ApiContents.MACHINE_USED.value(), ApiContents.MACHINE_USED.desc());
@@ -89,6 +96,7 @@ public class OrderService {
                         throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
                     }
                 }
+                inGame = true;
                 return orderId;
             } catch (IOException y) {
                 logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
@@ -124,6 +132,26 @@ public class OrderService {
                 orderInfo.setStatus(2);
             }
             orderInfoMapper.update(orderInfo);
+
+            List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
+            if (userLineList != null && userLineList.size() > 0) {
+                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+                userLineList.remove(0);
+                userLineMap.put(machineId, userLineList);
+                updateWilddogData(userLineMap, machineId);
+                inGame = false;
+                new Thread() {
+                    public void run() {
+                        try {
+                            putLine(machineId);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+
+
         } catch (Exception e) {
             if (e instanceof DollException) {
                 throw e;
@@ -134,6 +162,22 @@ public class OrderService {
             }
         }
 
+    }
+
+    private void putLine(Long machineId) throws InterruptedException {
+        if (!inGame) {
+            Thread.sleep(10000L);
+            List<UserLine> userLineList = userLineMap.get(machineId);
+            if (userLineList != null && userLineList.size() > 0) {
+                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+                userLineList.remove(0);
+                userLineMap.put(machineId, userLineList);
+                updateWilddogData(userLineMap, machineId);
+                putLine(machineId);
+            } else {
+                inGame = true;
+            }
+        }
     }
 
     public List<OrderInfo> getOrderList(Long userId, Integer doll) {
@@ -174,6 +218,74 @@ public class OrderService {
         rechargeOrderMapper.save(order);
         user.setGameMoney(user.getGameMoney() + p.getGameMoney());
         userInfoMapper.update(user);
+    }
+
+    private void isUserLine(Long userId, MachineInfo machineInfo) {
+        List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
+        if (userLineList == null || userLineList.size() == 0) {
+            //队列为空
+            if (machineInfo.getStatus().equals(2)) {
+                //游戏机使用中，加入队列，更新野狗数据
+                userLineList = new ArrayList<>();
+                UserLine userLine = new UserLine();
+                userLine.setUserId(userId);
+                userLine.setCreateTime(new Date());
+                userLineList.add(userLine);
+                userLineMap.put(machineInfo.getId(), userLineList);
+
+                updateWilddogData(userLineMap, machineInfo.getId());
+
+                throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+            } else {
+                return;
+            }
+        }
+        userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+        if (!userId.equals(userLineList.get(0).getUserId())) {
+            //不是当前玩家
+            boolean haveUser = false;
+            for (UserLine userLine : userLineList) {
+                if (userLine.getUserId().equals(userId)) {
+                    haveUser = true;
+                }
+            }
+
+            if (!haveUser) {
+                //加入队列,更新野狗数据
+                UserLine thisUser = new UserLine();
+                thisUser.setUserId(userId);
+                thisUser.setCreateTime(new Date());
+                userLineList.add(thisUser);
+                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+                updateWilddogData(userLineMap, machineInfo.getId());
+                userLineMap.put(machineInfo.getId(), userLineList);
+            }
+
+            throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+        } else {
+            //是当前玩家
+            if (machineInfo.getStatus().equals(2)) {
+                //游戏中
+                throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+            } else {
+                //当前玩家进入游戏
+//                userLineList.remove(0);
+//                userLineMap.put(machineInfo.getId(), userLineList);
+//                updateWilddogData(userLineMap);
+            }
+        }
+    }
+
+    private void updateWilddogData(Map<Long, List<UserLine>> userLineMap, Long machineId) {
+        WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
+        WilddogApp.initializeApp(options);
+        SyncReference ref = WilddogSync.getInstance().getReference();
+        List<UserLine> userLineList = userLineMap.get(machineId);
+        HashMap<String, Object> map = new HashMap<>();
+        for (int i = userLineList.size() - 1; i >= 0; i--) {
+            map.put(String.valueOf(i + 1), userLineList.get(i).getUserId());
+        }
+        ref.child(machineId.toString()).setValue(map);
     }
 
 

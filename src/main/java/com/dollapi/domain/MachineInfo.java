@@ -62,7 +62,7 @@ public class MachineInfo {
     private String commodityIds;
 
     /**
-     *
+     * 1普通 2游戏中
      */
     private Integer status;
 
