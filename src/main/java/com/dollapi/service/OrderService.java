@@ -2,6 +2,7 @@ package com.dollapi.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.common.pay.PayAPI;
 import com.dollapi.domain.*;
 import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
@@ -21,10 +22,12 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+
 
 @Service("orderService")
 public class OrderService {
@@ -44,6 +47,12 @@ public class OrderService {
 
     @Autowired
     private RechargePackageMapper rechargePackageMapper;
+
+    @Value("${aliAppId}")
+    private String aliAppId;
+
+    @Value("${aliAppId}")
+    private String aliAppId;
 
     private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
@@ -218,6 +227,12 @@ public class OrderService {
         rechargeOrderMapper.save(order);
         user.setGameMoney(user.getGameMoney() + p.getGameMoney());
         userInfoMapper.update(user);
+    }
+
+    public void rechargePay(Long packageId) {
+        RechargePackage rechargePackage = rechargePackageMapper.selectById(packageId);
+        PayAPI api = PayAPI.instance().ali();
+        api.pay()
     }
 
     private void isUserLine(Long userId, MachineInfo machineInfo) {

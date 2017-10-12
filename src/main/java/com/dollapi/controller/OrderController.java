@@ -64,6 +64,12 @@ public class OrderController extends BaseController {
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
+    @RequestMapping("/rechargeCallBack")
+    public Results rechargeCallBack(HttpServletRequest request){
+
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
     @RequestMapping("/callBack")
     public Results callBack(HttpServletRequest request) {
         Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId").toString());
