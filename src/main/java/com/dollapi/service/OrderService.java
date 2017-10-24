@@ -3,6 +3,7 @@ package com.dollapi.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.pay.PayAPI;
+import com.common.pay.PayParam;
 import com.dollapi.domain.*;
 import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
@@ -51,8 +52,15 @@ public class OrderService {
     @Value("${aliAppId}")
     private String aliAppId;
 
-    @Value("${aliAppId}")
-    private String aliAppId;
+    @Value("${aliAppPrivateKey}")
+    private String aliAppPrivateKey;
+
+    @Value("${aliAppPublicKey}")
+    private String aliAppPublicKey;
+
+    @Value("${aliPublicKey}")
+    private String aliPublicKey;
+
 
     private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
@@ -229,10 +237,21 @@ public class OrderService {
         userInfoMapper.update(user);
     }
 
-    public void rechargePay(Long packageId) {
+    public String rechargePay(Long packageId) {
         RechargePackage rechargePackage = rechargePackageMapper.selectById(packageId);
-        PayAPI api = PayAPI.instance().ali();
-        api.pay()
+        PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
+        api.notifyUrl("legendream.cn");
+        PayParam param = new PayParam();
+        param.setSubject(rechargePackage.getPackageName());
+        param.setOutTradeNo(UUID.randomUUID().toString().replaceAll("-", ""));
+        param.setDesc(rechargePackage.getPackageName() + "充值" + rechargePackage.getPrice().toString() + "获得" + rechargePackage.getGameMoney().toString() + "游戏币");
+        String payInfo = api.pay(param, 10, "");
+        return payInfo;
+    }
+
+    public String rechargeCallBack(Object notifyParam, Long userId) {
+        // FIXME: 2017/10/24 这里需要实现
+        return null;
     }
 
     private void isUserLine(Long userId, MachineInfo machineInfo) {

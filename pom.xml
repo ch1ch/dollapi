@@ -133,6 +133,12 @@
             <version>1.2-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>sdk-java</artifactId>
+            <version>20170829142630</version>
+        </dependency>
+
 
 
     </dependencies>

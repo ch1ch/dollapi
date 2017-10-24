@@ -4,6 +4,7 @@ import com.dollapi.domain.UserThird;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.mapper.UserThirdMapper;
 
+import com.dollapi.service.OrderService;
 import com.dollapi.service.UserService;
 import com.dollapi.vo.UserLine;
 import com.wilddog.client.SyncError;
@@ -38,6 +39,9 @@ public class UserTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     @Test
 //    @Rollback
@@ -102,6 +106,12 @@ public class UserTest {
         userLineList.remove(0);
 
 
+        System.out.println(11);
+    }
+
+    @Test
+    public void testPay() {
+        String payInfo = orderService.rechargePay(1L);
         System.out.println(11);
     }
 
