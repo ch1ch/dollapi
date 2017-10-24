@@ -28,6 +28,9 @@ public class BaseController {
 
     public UserInfo getUserInfo(String token) {
         UserInfo userInfo = userInfoMapper.selectByToken(token);
+        if (userInfo == null) {
+            throw new DollException(ApiContents.USER_LOGIN_ERROR.value(), ApiContents.USER_LOGIN_ERROR.desc());
+        }
         return userInfo;
     }
 
