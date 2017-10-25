@@ -16,5 +16,7 @@ public interface RechargeOrderMapper {
 
     public List<RechargeOrder> selectByUserId(Long userId);
 
+    public RechargeOrder selectById(String id);
+
 
 }

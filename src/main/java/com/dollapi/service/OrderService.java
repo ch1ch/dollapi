@@ -240,13 +240,14 @@ public class OrderService {
         api.notifyUrl("legendream.cn  成功回调");
         PayParam param = new PayParam();
         param.setSubject(p.getPackageName());
-        param.setOutTradeNo(UUID.randomUUID().toString().replaceAll("-", ""));
+        param.setOutTradeNo(order.getId());
         param.setDesc(p.getPackageName() + "充值" + p.getPrice().toString() + "获得" + p.getGameMoney().toString() + "游戏币");
 
         String payInfo = api.pay(param, 10, "");
         return payInfo;
     }
 
+    //暂时不用
     public String rechargePay(Long packageId) {
         RechargePackage rechargePackage = rechargePackageMapper.selectById(packageId);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
@@ -259,10 +260,16 @@ public class OrderService {
         return payInfo;
     }
 
-    public String rechargeCallBack(String orderId, String tradeNo) {
+    public void rechargeCallBack(String orderId, String tradeNo) {
         // FIXME: 2017/10/24 这里需要实现
+        RechargeOrder order = rechargeOrderMapper.selectById(orderId);
+        UserInfo user = userInfoMapper.selectUserById(order.getUserId());
+        order.setStatus(2);
+        order.setOutPayOrder(tradeNo);
 
-        return null;
+        user.setGameMoney(user.getGameMoney() + order.getGameMoney());
+        userInfoMapper.update(user);
+        rechargeOrderMapper.update(order);
     }
 
     private void isUserLine(Long userId, MachineInfo machineInfo) {

@@ -70,12 +70,13 @@ public class OrderController extends BaseController {
     @RequestMapping("/rechargeCallBack")
     public Results rechargeCallBack(HttpServletRequest request) {
         PayResult r = PayAPI.instance().processNotify(request.getParameterMap(), 1);
-        if (r.getStatus() == PayResult.PayStatus.success){
+        if (r.getStatus() == PayResult.PayStatus.success) {
             //支付成功
-            r.getTradeNo();//支付宝流水号
-            r.getOrderCode();//我方订单号
+//            r.getTradeNo();//支付宝流水号
+//            r.getOrderCode();//我方订单号
+            orderService.rechargeCallBack(r.getOrderCode(), r.getTradeNo());
         }
-            return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
     @RequestMapping("/callBack")

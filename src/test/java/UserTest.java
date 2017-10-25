@@ -1,6 +1,8 @@
 import com.dollapi.Application;
+import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.UserInfo;
 import com.dollapi.domain.UserThird;
+import com.dollapi.mapper.RechargeOrderMapper;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.mapper.UserThirdMapper;
 
@@ -42,6 +44,9 @@ public class UserTest {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RechargeOrderMapper rechargeOrderMapper;
 
     @Test
 //    @Rollback
@@ -114,6 +119,14 @@ public class UserTest {
         String payInfo = orderService.rechargePay(1L);
         System.out.println(11);
     }
+
+    @Test
+    public void testGetOrder(){
+        RechargeOrder order = rechargeOrderMapper.selectById("97f3a0d7577f4351b7b90da37410a192");
+        System.out.println(11);
+    }
+
+
 
 
 }

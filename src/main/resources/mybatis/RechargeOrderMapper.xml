@@ -76,5 +76,9 @@
         FROM recharge_order WHERE recharge_order.user_id=#{userId}
     </select>
 
+    <select id="selectById" parameterType="String" resultMap="RechargeOrderMap">
+        SELECT <include refid="columns"/> FROM recharge_order WHERE recharge_order.id=#{id}
+    </select>
+
 
 </mapper>
