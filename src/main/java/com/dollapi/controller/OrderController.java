@@ -1,5 +1,7 @@
 package com.dollapi.controller;
 
+import com.common.pay.PayAPI;
+import com.common.pay.PayResult;
 import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
@@ -60,14 +62,20 @@ public class OrderController extends BaseController {
         Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
         String outPayOrder = request.getParameter("outPayOrder");
         validParamsNotNull(token, packageId, payType, outPayOrder);
-        orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        String payInfo = orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
     }
 
-    @RequestMapping("/rechargeCallBack")
-    public Results rechargeCallBack(HttpServletRequest request){
 
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    @RequestMapping("/rechargeCallBack")
+    public Results rechargeCallBack(HttpServletRequest request) {
+        PayResult r = PayAPI.instance().processNotify(request.getParameterMap(), 1);
+        if (r.getStatus() == PayResult.PayStatus.success){
+            //支付成功
+            r.getTradeNo();//支付宝流水号
+            r.getOrderCode();//我方订单号
+        }
+            return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
     @RequestMapping("/callBack")

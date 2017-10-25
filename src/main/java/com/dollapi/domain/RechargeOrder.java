@@ -56,7 +56,7 @@ public class RechargeOrder  {
 	private Date createTime;
 
 	/**
-	*  
+	*  1下单  2成功
 	*/
 	private Integer status;
 
