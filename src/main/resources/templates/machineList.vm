@@ -59,6 +59,7 @@
                     <td>摄像头2</td>
                     <td>直播地址</td>
                     <td>游戏币</td>
+                    <td>操作</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,6 +73,7 @@
                         <td>$mac.video2</td>
                         <td>$mac.video3</td>
                         <td>$mac.gameMoney</td>
+                        <td><a href="/admin/machine/getMachineById?id=$mac.id">编辑</a></td>
                     </tr>
                     #end
                 </tbody>

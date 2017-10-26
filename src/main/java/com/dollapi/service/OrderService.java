@@ -234,6 +234,7 @@ public class OrderService {
         // FIXME: 2017/10/25 这里使用枚举 1下单  2成功
         order.setStatus(1);
         rechargeOrderMapper.save(order);
+
 //        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
@@ -323,7 +324,7 @@ public class OrderService {
                 //当前玩家进入游戏
 //                userLineList.remove(0);
 //                userLineMap.put(machineInfo.getId(), userLineList);
-//                updateWilddogData(userLineMap);
+//                updateWilddogData(userLineMap,machineInfo.getId());
             }
         }
     }
