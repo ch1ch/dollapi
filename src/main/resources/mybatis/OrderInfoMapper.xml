@@ -97,4 +97,10 @@
         </if>
     </select>
 
+    <select id="selectAllOrder" resultMap="OrderInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM order_info
+    </select>
+
 </mapper>

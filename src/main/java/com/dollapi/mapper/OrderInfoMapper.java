@@ -20,5 +20,7 @@ public interface OrderInfoMapper {
 
     public List<OrderInfo> selectByUserId(Map<String, Object> params);
 
+    public List<OrderInfo> selectAllOrder();
+
 
 }

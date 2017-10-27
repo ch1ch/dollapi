@@ -39,7 +39,7 @@ public class AdminUserController {
         if (page == null) {
             page = "1";
         }
-        PageHelper.startPage(Integer.valueOf(page), 3);
+        PageHelper.startPage(Integer.valueOf(page), 10);
         List<UserInfo> list = userInfoMapper.selectAllUser();
         PageInfo pageInfo = new PageInfo(list);
 
