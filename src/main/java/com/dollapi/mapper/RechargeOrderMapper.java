@@ -18,5 +18,7 @@ public interface RechargeOrderMapper {
 
     public RechargeOrder selectById(String id);
 
+    public List<RechargeOrder> selectAllRechargeOrder();
+
 
 }

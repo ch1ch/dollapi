@@ -80,5 +80,9 @@
         SELECT <include refid="columns"/> FROM recharge_order WHERE recharge_order.id=#{id}
     </select>
 
+    <select id="selectAllRechargeOrder" resultMap="RechargeOrderMap">
+        SELECT <include refid="columns"/> FROM recharge_order
+    </select>
+
 
 </mapper>
