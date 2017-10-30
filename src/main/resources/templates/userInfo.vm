@@ -31,7 +31,8 @@
                 <li><a href="#">首页</a></li>
                 <li class="active"><a href="/admin/user/userList">用户列表</a></li>
                 <li><a href="/admin/machine/getMachineList">机器列表</a></li>
-                <li><a href="#">订单列表</a></li>
+                <li><a href="/admin/order/orderList">订单列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
         ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
@@ -78,11 +79,15 @@
         <input id="createTime" name="createTime" type="text"
                value="$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)"/>
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <button type="submit" class="btn btn-default" onclick="updateUser()">保存</button>
-        </div>
-    </div>
+##    <div class="control-group">
+##        <div class="controls">
+##            <button type="submit" class="btn btn-default" onclick="updateUser()">保存</button>
+##        </div>
+##    </div>
+
+    <button type="button" class="btn btn-primary" onclick="updateUser()">保存</button>
+
+
 </div>
 
 
@@ -91,14 +96,32 @@
 
 <script type="text/javascript">
     function updateUser() {
+        var id = $("#id").val();
+        var nickName = $("#nickName").val();
+        var userLevel = $("#userLevel").val();
+        var phoneNumber = $("#phoneNumber").val();
+        var userPoint = $("#userPoint").val();
+        var gameMoney = $("#gameMoney").val();
         $.ajax({
             type: "POST",
-            data: {id: 1},
+            data: {
+                id: id,
+                nickName: nickName,
+                userLevel: userLevel,
+                phoneNumber: phoneNumber,
+                userPoint: userPoint,
+                gameMoney: gameMoney
+            },
             url: "/admin/user/updateUserInfo",
             success: function (data) {
-                console.log(data);
+                if (data.code == 200) {
+                    alert("操作成功");
+                } else {
+                    alert("操作失败");
+                }
             },
             error: function (data) {
+                alert("操作失败");
             }
         });
     }

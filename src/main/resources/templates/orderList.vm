@@ -32,6 +32,7 @@
                 <li ><a href="/admin/user/userList">用户列表</a></li>
                 <li><a href="/admin/machine/getMachineList">机器列表</a></li>
                 <li class="active"><a href="/admin/order/orderList">订单列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
             </ul>
         </div>
     </div>
@@ -56,16 +57,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                    #foreach($user in $list)
+                    #foreach($order in $list)
                     <tr>
-                        <td>$user.id</td>
-                        <td>$user.nickName</td>
-                        <td>$user.userLevel</td>
-                        <td>$user.phoneNumber</td>
-                        <td>$user.userPoint</td>
-                        <td>$user.gameMoney</td>
-                        <td>$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)</td>
-                        <td><a href="/admin/machine/getMachineById?id=$mac.id">编辑</a></td>
+                        <td>$order.id</td>
+                        <td>$order.userName</td>
+                        <td>$order.machineName</td>
+                        <td>$order.gameMoneyPrice</td>
+                        <td>$order.dollName</td>
+                        <td>$order.status</td>
+                        <td>$date.format('yyyy-MM-dd HH:mm:ss ',$order.createTime)</td>
+                        <td><a href="/admin/order/getOrderById?id=$order.id">编辑</a></td>
                     </tr>
                     #end
                 </tbody>
@@ -81,10 +82,10 @@
 
     第 $pageNum 页
     #if($pageNum!=1)
-        <a href="/admin/user/userList?pakge=$prePage">上一页</a>
+        <a href="/admin/order/orderList?pakge=$prePage">上一页</a>
     #end
     #if($pageNum!=$nextPage)
-        <a href="/admin/user/userList?page=$nextPage">下一页</a>
+        <a href="/admin/order/orderList?page=$nextPage">下一页</a>
     #end
 
     跳转到
@@ -95,7 +96,7 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
         #foreach($n in $numbers)
-            <li><a href="/admin/user/userList?page=$n">$n</a></li>
+            <li><a href="/admin/order/orderList?page=$n">$n</a></li>
         #end
     </ul>
 </div>

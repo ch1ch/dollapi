@@ -67,6 +67,7 @@
         <set>
             <if test="id != null">id = #{id},</if>
             <if test="machineName != null">machine_name = #{machineName},</if>
+            <if test="dollName != null">doll_name = #{dollName},</if>
             <if test="introduce != null">introduce = #{introduce},</if>
             <if test="ipAddress != null">ip_address = #{ipAddress},</if>
             <if test="machineImg != null">machine_img = #{machineImg},</if>

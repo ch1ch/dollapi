@@ -6,14 +6,17 @@ import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
 import com.dollapi.domain.UserInfo;
+import com.dollapi.mapper.OrderInfoMapper;
 import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.vo.OrderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
 
     @RequestMapping("/createOrder")
     public Results createOrder(HttpServletRequest request) {
@@ -32,13 +38,32 @@ public class OrderController extends BaseController {
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), orderId);
     }
 
+    @RequestMapping("/getOrderById")
+    public Results getOrderById(HttpServletRequest request) {
+        String orderId = request.getParameter("orderId");
+        validParamsNotNull(orderId);
+        OrderInfo order = orderInfoMapper.selectById(orderId);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), order);
+    }
+
     @RequestMapping("/getUserOrder")
     public Results getUserOrder(HttpServletRequest request) {
         String token = request.getParameter("token");
         Integer doll = request.getParameter("doll") == null ? null : Integer.valueOf(request.getParameter("doll").toString());
         validParamsNotNull(token);
         List<OrderInfo> list = orderService.getOrderList(getUserInfo(token).getId(), doll);
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), list);
+        List<OrderVO> voList = new ArrayList<>();
+        for (OrderInfo orderInfo : list) {
+            OrderVO vo = new OrderVO();
+            vo.setId(orderInfo.getId());
+            vo.setGameMoneyPrice(orderInfo.getGameMoneyPrice());
+            vo.setDollName(orderInfo.getDollName());
+            vo.setDollImg(orderInfo.getDollImg());
+            vo.setStatus(orderInfo.getStatus());
+            vo.setCreateTime(orderInfo.getCreateTime());
+            voList.add(vo);
+        }
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), voList);
     }
 
     @RequestMapping("/getRechargePackage")

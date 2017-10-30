@@ -99,7 +99,7 @@ public class OrderService {
             machineInfoMapper.update(machineInfo);
             orderInfoMapper.save(orderInfo);
 
-            String url = machineInfo.getIpAddress() + "/start?token=" + userInfo.getToken() + "&orderId=" + orderInfo.getId();
+            String url = "http://" + machineInfo.getIpAddress() + "/start?token=" + userInfo.getToken() + "&orderId=" + orderInfo.getId();
             CloseableHttpClient httpclient = HttpClients.createDefault();
             HttpGet httppost = new HttpGet(url);
             try {
@@ -108,7 +108,7 @@ public class OrderService {
                 if (entity != null) {
                     String responseText = EntityUtils.toString(entity, "UTF-8");
                     JSONObject dataObject = JSON.parseObject(responseText);
-                    if (!dataObject.get("code").equals("200")) {
+                    if (!dataObject.get("code").toString().equals("200")) {
                         logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
                         throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
                     }

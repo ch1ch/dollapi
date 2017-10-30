@@ -31,7 +31,8 @@
                 <li><a href="#">首页</a></li>
                 <li class="active"><a href="/admin/user/userList">用户列表</a></li>
                 <li><a href="/admin/machine/getMachineList">机器列表</a></li>
-                <li><a href="#">订单列表</a></li>
+                <li><a href="/admin/order/orderList">订单列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
         ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
@@ -58,6 +59,7 @@
                     <td>积分</td>
                     <td>游戏币</td>
                     <td>注册时间</td>
+                    <td>操作</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -70,6 +72,7 @@
                         <td>$user.userPoint</td>
                         <td>$user.gameMoney</td>
                         <td>$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)</td>
+                        <td><a href="/admin/user/getUserInfo?userId=$user.id">编辑</a></td>
                     </tr>
                     #end
                 </tbody>

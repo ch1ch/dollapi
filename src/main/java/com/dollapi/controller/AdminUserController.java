@@ -2,6 +2,8 @@ package com.dollapi.controller;
 
 import com.dollapi.domain.UserInfo;
 import com.dollapi.mapper.UserInfoMapper;
+import com.dollapi.util.ApiContents;
+import com.dollapi.util.Results;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.velocity.tools.generic.DateTool;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * <p>Copyright: All Rights Reserved</p>
@@ -68,7 +71,8 @@ public class AdminUserController {
     }
 
     @RequestMapping("/updateUserInfo")
-    public String updateUserInfo(ModelMap map, HttpServletRequest request) {
+    @ResponseBody
+    public Results updateUserInfo(HttpServletRequest request) {
         UserInfo user = new UserInfo();
         user.setId(Long.valueOf(request.getParameter("id")));
         user.setNickName(request.getParameter("nickName").toString());
@@ -76,14 +80,14 @@ public class AdminUserController {
         user.setPhoneNumber(request.getParameter("phoneNumber"));
         user.setUserPoint(Long.valueOf(request.getParameter("userPoint")));
         user.setGameMoney(Long.valueOf(request.getParameter("gameMoney")));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            user.setCreateTime(sdf.parse(request.getParameter("createTime")));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return "userInfo";
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        try {
+//            user.setCreateTime(sdf.parse(request.getParameter("createTime")));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        userInfoMapper.update(user);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
 }

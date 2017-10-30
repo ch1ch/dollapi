@@ -65,8 +65,8 @@ public class AdminOrderController {
     public String getOrderById(ModelMap map, HttpServletRequest request) {
         String orderId = request.getParameter("id");
         OrderInfo order = orderInfoMapper.selectById(orderId);
-        map.addAttribute("date", new DateTool());
-        map.put("order", new DateTool());
+        map.addAttribute("order", order);
+        map.put("date", new DateTool());
         return "orderInfo";
     }
 
@@ -98,8 +98,8 @@ public class AdminOrderController {
     public String getRechargePackage(ModelMap map, HttpServletRequest request) {
         Long id = Long.valueOf(request.getParameter("id"));
         RechargePackage p = rechargePackageMapper.selectById(id);
-        map.put("date", new DateTool());
         map.addAttribute("package", p);
+        map.put("date", new DateTool());
         return "rechargePackage";
     }
 

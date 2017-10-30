@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<nav class="nav navbar-inverse navbar-fixed-top" role="navgation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav nav">
+                <li><a href="#">首页</a></li>
+                <li><a href="/admin/user/userList">用户列表</a></li>
+                <li class="active"><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li><a href="/admin/order/orderList">订单列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
+            </ul>
+        ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
+        ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
+        ##                <button class="btn btn-success" style="margin-right: 30px;">搜索</button>
+        ##                <a href="#" class="navbar-link">注册</a>
+        ##                <a href="#" class="navbar-link">登录 </a>
+        ##            </div>
+        </div>
+    </div>
+</nav>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="form-group">
+        <label for="exampleInputEmail1">编号</label>
+        <input id="id" name="id" type="text" value="$package.id"/>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">套餐名</label>
+        <input id="packageName" name="packageName" type="text" value="$package.packageName"/>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">套餐图片</label>
+        <input id="packageUrl" name="packageUrl" type="text" value="$package.packageUrl"/>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">套餐价格</label>
+        <input id="price" name="price" type="text" value="$package.price"/>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">充值游戏币</label>
+        <input id="gameMoney" name="gameMoney" type="text" value="$package.gameMoney"/>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputEmail1">创建时间</label>
+        <input id="createTime" name="createTime" type="text" value="$date.format('yyyy-MM-dd HH:mm:ss ',$package.createTime)"/>
+    </div>
+
+
+    <button type="button" class="btn btn-primary" onclick="updatePackage()">保存</button>
+</div>
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+    function updatePackage() {
+        var id = $("#id").val();
+        var machineName = $("#machineName").val();
+        var dollName = $("#dollName").val();
+        var ipAddress = $("#ipAddress").val();
+        var machineImg = $("#machineImg").val();
+        var dollImg = $("#dollImg").val();
+        var video1 = $("#video1").val();
+        var video2 = $("#video2").val();
+        var video3 = $("#video3").val();
+        var gameMoney = $("#gameMoney").val();
+        $.ajax({
+            type: "POST",
+            data: {
+                id: 1,
+                machineName: machineName,
+                dollName: dollName,
+                ipAddress: ipAddress,
+                machineImg: machineImg,
+                dollImg: dollImg,
+                video1: video1,
+                video2: video2,
+                video3: video3,
+                gameMoney: gameMoney
+            },
+            url: "/admin/machine/updateMachine",
+            success: function (data) {
+                if (data.code == 200) {
+                    alert("操作成功");
+                } else {
+                    alert("操作失败");
+                }
+            },
+            error: function (data) {
+                alert("操作失败");
+            }
+        });
+    }
+</script>

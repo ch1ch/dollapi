@@ -2,6 +2,8 @@ package com.dollapi.controller;
 
 import com.dollapi.domain.MachineInfo;
 import com.dollapi.mapper.MachineInfoMapper;
+import com.dollapi.util.ApiContents;
+import com.dollapi.util.Results;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wilddog.client.SyncReference;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -65,10 +68,10 @@ public class AdminMachineController {
     }
 
     @RequestMapping("/updateMachine")
-    public String updateMachine(HttpServletRequest request) {
+    @ResponseBody
+    public Results updateMachine(HttpServletRequest request) {
 
         // FIXME: 2017/10/26 这里不修改图片 另外新建方法修改图片
-
         Long id = Long.valueOf(request.getParameter("id"));
         String machineName = request.getParameter("machineName");
         String dollName = request.getParameter("dollName");
@@ -87,7 +90,7 @@ public class AdminMachineController {
         mac.setVideo3(video3);
         mac.setGameMoney(gameMoney);
         machineInfoMapper.update(mac);
-        return "1";
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
 
