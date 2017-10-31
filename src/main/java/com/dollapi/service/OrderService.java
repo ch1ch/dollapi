@@ -238,8 +238,11 @@ public class OrderService {
 //        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
-        api.notifyUrl("legendream.cn  成功回调");
+        api.notifyUrl("http://47.94.236.45:9000/order/callBack");
         PayParam param = new PayParam();
+        logger.info(p.getPrice().toString());
+        // FIXME: 2017/10/31 这里测试0.01
+        param.setMoney("0.01");
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
         param.setDesc(p.getPackageName() + "充值" + p.getPrice().toString() + "获得" + p.getGameMoney().toString() + "游戏币");
