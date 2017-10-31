@@ -238,7 +238,9 @@ public class OrderService {
 //        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
-        api.notifyUrl("http://47.94.236.45:9000/order/callBack");
+
+        // FIXME: 2017/10/31 支付回调地址，这里用备案的
+        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
         PayParam param = new PayParam();
         logger.info(p.getPrice().toString());
         // FIXME: 2017/10/31 这里测试0.01

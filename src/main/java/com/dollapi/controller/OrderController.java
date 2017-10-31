@@ -2,6 +2,7 @@ package com.dollapi.controller;
 
 import com.common.pay.PayAPI;
 import com.common.pay.PayResult;
+import com.common.pay.common.JSON;
 import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
@@ -11,6 +12,8 @@ import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import com.dollapi.vo.OrderVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/order")
 public class OrderController extends BaseController {
+
+    private final static Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderService orderService;
@@ -86,6 +91,8 @@ public class OrderController extends BaseController {
         Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
         Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
         String outPayOrder = request.getParameter("outPayOrder");
+
+
         validParamsNotNull(token, packageId, payType, outPayOrder);
         String payInfo = orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
@@ -95,6 +102,7 @@ public class OrderController extends BaseController {
     @RequestMapping("/rechargeCallBack")
     public Results rechargeCallBack(HttpServletRequest request) {
         PayResult r = PayAPI.instance().processNotify(request.getParameterMap(), 1);
+        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(r));
         if (r.getStatus() == PayResult.PayStatus.success) {
             //支付成功
 //            r.getTradeNo();//支付宝流水号
