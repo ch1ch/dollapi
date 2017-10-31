@@ -32,6 +32,9 @@ public class OrderController extends BaseController {
     private OrderService orderService;
 
     @Autowired
+    private PayAPI api;
+
+    @Autowired
     private OrderInfoMapper orderInfoMapper;
 
     @RequestMapping("/createOrder")
@@ -99,10 +102,10 @@ public class OrderController extends BaseController {
     }
 
 
-    @RequestMapping("/rechargeCallBack")
+    @RequestMapping("/rechargeCallBack1")
     public Results rechargeCallBack(HttpServletRequest request) {
-        PayResult r = PayAPI.instance().processNotify(request.getParameterMap(), 1);
-        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(r));
+        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(request.getParameterMap()));
+        PayResult r = api.processNotify(request.getParameterMap(), 1);
         if (r.getStatus() == PayResult.PayStatus.success) {
             //支付成功
 //            r.getTradeNo();//支付宝流水号

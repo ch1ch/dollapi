@@ -35,6 +35,9 @@ public class OrderService {
     private final static Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
+    private PayAPI api;
+
+    @Autowired
     private MachineInfoMapper machineInfoMapper;
 
     @Autowired
@@ -48,18 +51,6 @@ public class OrderService {
 
     @Autowired
     private RechargePackageMapper rechargePackageMapper;
-
-    @Value("${aliAppId}")
-    private String aliAppId;
-
-    @Value("${aliAppPrivateKey}")
-    private String aliAppPrivateKey;
-
-    @Value("${aliAppPublicKey}")
-    private String aliAppPublicKey;
-
-    @Value("${aliPublicKey}")
-    private String aliPublicKey;
 
 
     private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
@@ -237,7 +228,7 @@ public class OrderService {
 
 //        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
 //        userInfoMapper.update(user);
-        PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
+
 
         // FIXME: 2017/10/31 支付回调地址，这里用备案的
         api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
@@ -256,7 +247,6 @@ public class OrderService {
     //暂时不用
     public String rechargePay(Long packageId) {
         RechargePackage rechargePackage = rechargePackageMapper.selectById(packageId);
-        PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
         api.notifyUrl("legendream.cn");
         PayParam param = new PayParam();
         param.setSubject(rechargePackage.getPackageName());
