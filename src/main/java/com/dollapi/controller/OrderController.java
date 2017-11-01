@@ -16,11 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
@@ -103,9 +105,9 @@ public class OrderController extends BaseController {
 
 
     @RequestMapping("/rechargeCallBack1")
-    public Results rechargeCallBack(HttpServletRequest request) {
-        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(request.getParameterMap()));
-        PayResult r = api.processNotify(request.getParameterMap(), 1);
+    public Results rechargeCallBack(@RequestParam(required = false) Map<String, String> map) {
+        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(map));
+        PayResult r = api.processNotify(map, 1);
         if (r.getStatus() == PayResult.PayStatus.success) {
             //支付成功
 //            r.getTradeNo();//支付宝流水号
