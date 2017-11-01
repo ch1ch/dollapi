@@ -7,6 +7,7 @@ import com.dollapi.util.Results;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,12 +40,24 @@ public class AdminUserController {
 
     @RequestMapping("/userList")
     public String userList(ModelMap map, HttpServletRequest request) {
+
+        String nickName = request.getParameter("nickName") == null || request.getParameter("nickName").toString().equals("") ? null : request.getParameter("nickName").toString();
+        Long id = request.getParameter("id") == null || request.getParameter("id").toString().equals("") ? null : Long.valueOf(request.getParameter("id"));
+
+        Map<String, Object> params = new HashedMap();
+        if (nickName != null && !nickName.equals("")) {
+            params.put("nickName", nickName);
+        }
+        if (id != null && id > 0) {
+            params.put("id", id);
+        }
+
         String page = request.getParameter("page");
         if (page == null) {
             page = "1";
         }
         PageHelper.startPage(Integer.valueOf(page), 10);
-        List<UserInfo> list = userInfoMapper.selectAllUser();
+        List<UserInfo> list = userInfoMapper.selectAllUser(params);
         PageInfo pageInfo = new PageInfo(list);
 
         List<String> numbers = new ArrayList<>();

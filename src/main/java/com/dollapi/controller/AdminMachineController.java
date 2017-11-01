@@ -3,6 +3,7 @@ package com.dollapi.controller;
 import com.dollapi.domain.MachineInfo;
 import com.dollapi.mapper.MachineInfoMapper;
 import com.dollapi.util.ApiContents;
+import com.dollapi.util.ImageUploadTools;
 import com.dollapi.util.Results;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,12 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>Copyright: All Rights Reserved</p>
@@ -34,6 +40,8 @@ public class AdminMachineController {
 
     @Autowired
     private MachineInfoMapper machineInfoMapper;
+
+    private static final String USER_HEAD_IMAGE_PATH = "data/head/";
 
     @RequestMapping("/getMachineList")
     public String getMachineList(ModelMap map, HttpServletRequest request) {
@@ -91,6 +99,30 @@ public class AdminMachineController {
         mac.setGameMoney(gameMoney);
         machineInfoMapper.update(mac);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping(value = "uploadMachineImg")
+    public String uploadMachineImg(@RequestParam("file") MultipartFile file, HttpServletRequest request, ModelMap map) throws IOException {
+        Long machineId = Long.valueOf(request.getParameter("machineId"));
+        String fileUrl = ImageUploadTools.uploadQrFile(UUID.randomUUID().toString().replaceAll("-", "") + ".jpg", file.getInputStream(), USER_HEAD_IMAGE_PATH);
+        MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
+        machineInfo.setId(machineId);
+        machineInfo.setMachineImg(fileUrl);
+        machineInfoMapper.update(machineInfo);
+        map.addAttribute("mac", machineInfo);
+        return "machineInfo";
+    }
+
+    @RequestMapping(value = "uploadDollImg")
+    public String uploadDollImg(@RequestParam("test") MultipartFile file, HttpServletRequest request, ModelMap map) throws IOException {
+        Long machineId = Long.valueOf(request.getParameter("machineId"));
+        String fileUrl = ImageUploadTools.uploadQrFile(UUID.randomUUID().toString().replaceAll("-", "") + ".jpg", file.getInputStream(), USER_HEAD_IMAGE_PATH);
+        MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
+        machineInfo.setId(machineId);
+        machineInfo.setDollImg(fileUrl);
+        machineInfoMapper.update(machineInfo);
+        map.addAttribute("mac", machineInfo);
+        return "machineInfo";
     }
 
 

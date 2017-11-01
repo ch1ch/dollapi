@@ -37,7 +37,19 @@
         </div>
     </div>
 </nav>
-
+<br>
+<br>
+<br>
+<br>
+<div class="form-group">
+    <form method="POST" action="/admin/order/orderList">
+        <label for="exampleInputEmail1">订单编号</label>
+        <input id="id" name="id" type="text" value="$!{id}"/>
+        <label for="exampleInputEmail1">用户编号</label>
+        <input id="userId" name="userId" type="text" value="$!{userId}"/>
+        <input type="submit" value="搜索"/>
+    </form>
+</div>
 
 <div class="container-fluid">
     <div class="row-fluid">
@@ -82,7 +94,7 @@
 
     第 $pageNum 页
     #if($pageNum!=1)
-        <a href="/admin/order/orderList?pakge=$prePage">上一页</a>
+        <a href="/admin/order/orderList?page=$prePage">上一页</a>
     #end
     #if($pageNum!=$nextPage)
         <a href="/admin/order/orderList?page=$nextPage">下一页</a>

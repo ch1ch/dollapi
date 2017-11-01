@@ -16,6 +16,8 @@
 </head>
 <body>
 
+
+
 <nav class="nav navbar-inverse navbar-fixed-top" role="navgation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -43,12 +45,23 @@
         </div>
     </div>
 </nav>
-
+<br>
+<br>
+<br>
+<br>
+    <div class="form-group">
+        <form method="POST" action="/admin/user/userList">
+            <label for="exampleInputEmail1">昵称</label>
+            <input id="nickName" name="nickName" type="text" value="$!{nickName}"/>
+            <label for="exampleInputEmail1">编号</label>
+            <input id="id" name="id" type="text" value="$!{id}"/>
+            <input type="submit" value="搜索"/>
+        </form>
+    </div>
 
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12">
-            <h3>用户列表</h3>
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -101,7 +114,7 @@
 
     第 $pageNum 页
     #if($pageNum!=1)
-        <a href="/admin/user/userList?pakge=$prePage">上一页</a>
+        <a href="/admin/user/userList?page=$prePage">上一页</a>
     #end
     #if($pageNum!=$nextPage)
         <a href="/admin/user/userList?page=$nextPage">下一页</a>
@@ -123,4 +136,25 @@
 
 </body>
 </html>
+<script type="text/javascript">
+    function getUserList() {
+        var id = $("#id").val();
+        var nickName = $("#nickName").val();
+
+        $.ajax({
+            type: "POST",
+            data: {
+                id: id,
+                nickName: nickName
+            },
+            url: "/admin/user/userList",
+            success: function (data) {
+
+            },
+            error: function (data) {
+                alert("操作失败");
+            }
+        });
+    }
+</script>
 

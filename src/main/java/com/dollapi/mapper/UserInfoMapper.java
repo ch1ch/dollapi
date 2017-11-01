@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -23,7 +24,7 @@ public interface UserInfoMapper {
 
 //    ============================UI===================================
 
-    List<UserInfo> selectAllUser();
+    List<UserInfo> selectAllUser(Map<String,Object> params);
 
     UserInfo selectUserById(Long userId);
 }

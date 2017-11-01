@@ -70,11 +70,21 @@
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">机器图片</label>
-        <input id="machineImg" name="machineImg" type="text" value="$mac.machineImg"/>
+        <img src="$mac.machineImg" alt="Smiley face" width="42" height="42">
+        <form method="POST" enctype="multipart/form-data" action="/admin/machine/uploadMachineImg">
+            <p>文件：<input type="file" name="file"/></p>
+            <input type="hidden" id="machineId" name="machineId" value="$mac.id"/>
+            <p><input type="submit" value="上传"/></p>
+        </form>
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">娃娃图片</label>
-        <input id="dollImg" name="dollImg" type="text" value="$mac.dollImg"/>
+        <img src="$mac.dollImg" alt="Smiley face" width="42" height="42">
+        <form method="POST" enctype="multipart/form-data" action="/admin/machine/uploadDollImg">
+            <p>文件：<input type="file" name="file"/></p>
+            <input type="hidden" id="machineId" name="machineId" value="$mac.id"/>
+            <p><input type="submit" value="上传"/></p>
+        </form>
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">摄像头1</label>
