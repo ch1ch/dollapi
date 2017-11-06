@@ -2,6 +2,7 @@ package com.dollapi.controller;
 
 import com.common.pay.PayAPI;
 import com.common.pay.PayResult;
+import com.common.pay.common.JSON;
 import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
@@ -11,20 +12,29 @@ import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import com.dollapi.vo.OrderVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
 public class OrderController extends BaseController {
 
+    private final static Logger logger = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private PayAPI api;
 
     @Autowired
     private OrderInfoMapper orderInfoMapper;
@@ -86,15 +96,18 @@ public class OrderController extends BaseController {
         Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
         Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
         String outPayOrder = request.getParameter("outPayOrder");
+
+
         validParamsNotNull(token, packageId, payType, outPayOrder);
         String payInfo = orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
     }
 
 
-    @RequestMapping("/rechargeCallBack")
-    public Results rechargeCallBack(HttpServletRequest request) {
-        PayResult r = PayAPI.instance().processNotify(request.getParameterMap(), 1);
+    @RequestMapping("/rechargeCallBack1")
+    public Results rechargeCallBack(@RequestParam(required = false) Map<String, String> map) {
+        logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(map));
+        PayResult r = api.processNotify(map, 1);
         if (r.getStatus() == PayResult.PayStatus.success) {
             //支付成功
 //            r.getTradeNo();//支付宝流水号

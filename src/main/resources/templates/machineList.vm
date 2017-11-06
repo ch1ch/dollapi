@@ -103,7 +103,7 @@
 
     第 $pageNum 页
     #if($pageNum!=1)
-        <a href="/admin/machine/getMachineList?pakge=$prePage">上一页</a>
+        <a href="/admin/machine/getMachineList?page=$prePage">上一页</a>
     #end
     #if($pageNum!=$nextPage)
         <a href="/admin/machine/getMachineList?page=$nextPage">下一页</a>

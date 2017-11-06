@@ -97,10 +97,12 @@
         </if>
     </select>
 
-    <select id="selectAllOrder" resultMap="OrderInfoMap">
+    <select id="selectAllOrder" resultMap="OrderInfoMap" parameterType="Map">
         SELECT
         <include refid="columns"/>
-        FROM order_info
+        FROM order_info WHERE 1=1
+        <if test="id != null"> AND id = #{id} </if>
+        <if test="userId != null"> AND user_id = #{userId} </if>
     </select>
 
     <select id="selectByMachineId" resultMap="OrderInfoMap" parameterType="Long">

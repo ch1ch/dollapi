@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -121,12 +122,17 @@ public class UserTest {
     }
 
     @Test
-    public void testGetOrder(){
+    public void testGetOrder() {
         RechargeOrder order = rechargeOrderMapper.selectById("97f3a0d7577f4351b7b90da37410a192");
         System.out.println(11);
     }
 
-
+    @Test
+    public void ttt() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d = sdf.parse("2017-11-06 18:48:00");
+        System.out.println((new Date().getTime() - d.getTime()) / 1000);
+    }
 
 
 }
