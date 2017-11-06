@@ -103,4 +103,12 @@
         FROM order_info
     </select>
 
+    <select id="selectByMachineId" resultMap="OrderInfoMap" parameterType="Long">
+        SELECT <include refid="columns"/> FROM order_info WHERE order_info.machine_id=#{machineId} ORDER BY order_info.create_time DESC
+    </select>
+
+    <select id="selectOneByMachineId" resultMap="OrderInfoMap" parameterType="Long">
+        SELECT <include refid="columns"/> FROM order_info WHERE order_info.machine_id=#{machineId} ORDER BY order_info.create_time DESC LIMIT 1
+    </select>
+
 </mapper>

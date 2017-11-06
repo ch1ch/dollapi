@@ -22,5 +22,9 @@ public interface OrderInfoMapper {
 
     public List<OrderInfo> selectAllOrder();
 
+    public List<OrderInfo> selectByMachineId(Long machineId);
+
+    public OrderInfo selectOneByMachineId(Long machineId);
+
 
 }

@@ -24,9 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -64,7 +66,7 @@ public class OrderService {
 
     private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
-    private static boolean inGame = true;
+//    private static boolean inGame = true;
 
     public String createOrder(UserInfo userInfo, Long machineId) {
 
@@ -113,7 +115,6 @@ public class OrderService {
                         throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
                     }
                 }
-                inGame = true;
                 return orderId;
             } catch (IOException y) {
                 logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
@@ -156,16 +157,7 @@ public class OrderService {
                 userLineList.remove(0);
                 userLineMap.put(machineId, userLineList);
                 updateWilddogData(userLineMap, machineId);
-                inGame = false;
-                new Thread() {
-                    public void run() {
-                        try {
-                            putLine(machineId);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
+//
             }
 
 
@@ -181,21 +173,21 @@ public class OrderService {
 
     }
 
-    private void putLine(Long machineId) throws InterruptedException {
-        if (!inGame) {
-            Thread.sleep(10000L);
-            List<UserLine> userLineList = userLineMap.get(machineId);
-            if (userLineList != null && userLineList.size() > 0) {
-                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-                userLineList.remove(0);
-                userLineMap.put(machineId, userLineList);
-                updateWilddogData(userLineMap, machineId);
-                putLine(machineId);
-            } else {
-                inGame = true;
-            }
-        }
-    }
+//    private void putLine(Long machineId) throws InterruptedException {
+//        if (!inGame) {
+//            Thread.sleep(10000L);
+//            List<UserLine> userLineList = userLineMap.get(machineId);
+//            if (userLineList != null && userLineList.size() > 0) {
+//                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//                userLineList.remove(0);
+//                userLineMap.put(machineId, userLineList);
+//                updateWilddogData(userLineMap, machineId);
+//                putLine(machineId);
+//            } else {
+//                inGame = true;
+//            }
+//        }
+//    }
 
     public List<OrderInfo> getOrderList(Long userId, Integer doll) {
         Map<String, Object> params = new HashMap<>();
@@ -290,6 +282,14 @@ public class OrderService {
 
                 throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
             } else {
+                userLineList = new ArrayList<>();
+                UserLine userLine = new UserLine();
+                userLine.setUserId(userId);
+                userLine.setCreateTime(new Date());
+                userLineList.add(userLine);
+                userLineMap.put(machineInfo.getId(), userLineList);
+
+                updateWilddogData(userLineMap, machineInfo.getId());
                 return;
             }
         }
@@ -324,7 +324,7 @@ public class OrderService {
                 //当前玩家进入游戏
 //                userLineList.remove(0);
 //                userLineMap.put(machineInfo.getId(), userLineList);
-//                updateWilddogData(userLineMap,machineInfo.getId());
+//                updateWilddogData(userLineMap, machineInfo.getId());
             }
         }
     }
@@ -339,6 +339,41 @@ public class OrderService {
             map.put(String.valueOf(i + 1), userLineList.get(i).getUserId());
         }
         ref.child(machineId.toString()).setValue(map);
+    }
+
+    @Scheduled(cron = "0/10 * *  * * ? ")
+    private void outLine() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        for (Long key : userLineMap.keySet()) {
+            MachineInfo machineInfo = machineInfoMapper.selectById(key);
+            if (machineInfo.getStatus().equals(2)) {
+                OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(key);
+                if (orderInfo != null && (90 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
+                    machineInfo.setStatus(1);
+                    machineInfoMapper.update(machineInfo);
+                    removeOne(key);
+                }
+            } else {
+                List<UserLine> userLineList = userLineMap.get(key);
+                if (userLineList != null && userLineList.size() > 0) {
+                    userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+                    if (10 < ((new Date().getTime() - userLineList.get(0).getCreateTime().getTime()) / 1000)) {
+                        System.out.println(sdf.format(new Date()));
+                        removeOne(key);
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeOne(Long machineId) {
+        List<UserLine> userLineList = userLineMap.get(machineId);
+        if (userLineList != null && userLineList.size() > 0) {
+            userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+            userLineList.remove(0);
+            userLineMap.put(machineId, userLineList);
+            updateWilddogData(userLineMap, machineId);
+        }
     }
 
 
