@@ -9,6 +9,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -103,5 +104,7 @@ public class AdminUserController {
         userInfoMapper.update(user);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
+
+
 
 }

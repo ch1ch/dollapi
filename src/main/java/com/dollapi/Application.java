@@ -14,6 +14,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -24,6 +25,7 @@ import java.util.List;
  * Created by hexu on 2017/9/6.
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application {
 
     @Value("${aliAppId}")

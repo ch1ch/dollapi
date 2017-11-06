@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class OrderService {
 
     private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
-    private static boolean inGame = true;
+//    private static boolean inGame = true;
 
     public String createOrder(UserInfo userInfo, Long machineId) {
 
@@ -104,7 +105,7 @@ public class OrderService {
                         throw new DollException(ApiContents.CREATE_ORDER_ERROR.value(), ApiContents.CREATE_ORDER_ERROR.desc());
                     }
                 }
-                inGame = true;
+//                inGame = true;
                 return orderId;
             } catch (IOException y) {
                 logger.info("创建订单失败:用户:" + JSON.toJSONString(userInfo) + "machineId:" + machineId.toString());
@@ -147,7 +148,7 @@ public class OrderService {
                 userLineList.remove(0);
                 userLineMap.put(machineId, userLineList);
                 updateWilddogData(userLineMap, machineId);
-                inGame = false;
+//                inGame = false;
                 new Thread() {
                     public void run() {
                         try {
@@ -173,19 +174,20 @@ public class OrderService {
     }
 
     private void putLine(Long machineId) throws InterruptedException {
-        if (!inGame) {
-            Thread.sleep(10000L);
-            List<UserLine> userLineList = userLineMap.get(machineId);
-            if (userLineList != null && userLineList.size() > 0) {
-                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-                userLineList.remove(0);
-                userLineMap.put(machineId, userLineList);
-                updateWilddogData(userLineMap, machineId);
-                putLine(machineId);
-            } else {
-                inGame = true;
-            }
+//        if (!inGame) {
+        Thread.sleep(10000L);
+        List<UserLine> userLineList = userLineMap.get(machineId);
+        if (userLineList != null && userLineList.size() > 0) {
+            userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+            userLineList.remove(0);
+            userLineMap.put(machineId, userLineList);
+            updateWilddogData(userLineMap, machineId);
+            putLine(machineId);
         }
+// else {
+//                inGame = true;
+//            }
+//        }
     }
 
     public List<OrderInfo> getOrderList(Long userId, Integer doll) {
@@ -334,6 +336,27 @@ public class OrderService {
             map.put(String.valueOf(i + 1), userLineList.get(i).getUserId());
         }
         ref.child(machineId.toString()).setValue(map);
+    }
+
+    @Scheduled(cron = "0/5 * *  * * ? ")
+    private void outLine() {
+        for (Long key : userLineMap.keySet()) {
+            List<UserLine> userLineList = userLineMap.get(key);
+            userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+            if (90 < (new Date().getTime() - userLineList.get(0).getCreateTime().getTime() / 1000)) {
+                userLineList.remove(0);
+
+                userLineMap.put(key, userLineList);
+
+                MachineInfo machineInfo = machineInfoMapper.selectById(key);
+                // FIXME: 2017/9/10 这里用枚举
+                machineInfo.setStatus(1);
+                machineInfoMapper.update(machineInfo);
+
+                updateWilddogData(userLineMap, key);
+
+            }
+        }
     }
 
 
