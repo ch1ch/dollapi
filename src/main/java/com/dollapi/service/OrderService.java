@@ -207,7 +207,7 @@ public class OrderService {
         return list;
     }
 
-    public String recharge(UserInfo user, Long packageId, Integer payType, String outPayOrder) {
+    public String recharge(UserInfo user, Long packageId, Integer payType) {
         RechargePackage p = rechargePackageMapper.selectById(packageId);
         if (p == null || p.getId() == null) {
             throw new DollException(ApiContents.PACKAGE_ERROR.value(), ApiContents.PACKAGE_ERROR.desc());
@@ -220,7 +220,7 @@ public class OrderService {
         order.setPackageName(p.getPackageName());
         order.setPrice(p.getPrice());
         order.setGameMoney(p.getGameMoney());
-        order.setOutPayOrder(outPayOrder);
+        order.setOutPayOrder("0000");
         // FIXME: 2017/9/11 这里使用枚举 1微信 2支付宝
         order.setPayType(payType);
         // FIXME: 2017/10/25 这里使用枚举 1下单  2成功
@@ -230,7 +230,8 @@ public class OrderService {
 //        user.setGameMoney(user.getGameMoney() + p.getGameMoney());
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
-        api.notifyUrl("legendream.cn  成功回调");
+//        api.notifyUrl("legendream.cn  成功回调");
+        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack1");
         PayParam param = new PayParam();
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());

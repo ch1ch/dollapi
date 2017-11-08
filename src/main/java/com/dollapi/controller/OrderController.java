@@ -95,11 +95,11 @@ public class OrderController extends BaseController {
         String token = request.getParameter("token");
         Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
         Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
-        String outPayOrder = request.getParameter("outPayOrder");
+//        String outPayOrder = request.getParameter("outPayOrder");
 
 
-        validParamsNotNull(token, packageId, payType, outPayOrder);
-        String payInfo = orderService.recharge(getUserInfo(token), packageId, payType, outPayOrder);
+        validParamsNotNull(token, packageId, payType);
+        String payInfo = orderService.recharge(getUserInfo(token), packageId, payType);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
     }
 
