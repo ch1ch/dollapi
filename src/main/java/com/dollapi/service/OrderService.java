@@ -10,10 +10,13 @@ import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import com.dollapi.vo.UserLine;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wilddog.client.SyncReference;
 import com.wilddog.client.WilddogSync;
 import com.wilddog.wilddogcore.WilddogApp;
 import com.wilddog.wilddogcore.WilddogOptions;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -375,6 +378,26 @@ public class OrderService {
             userLineMap.put(machineId, userLineList);
             updateWilddogData(userLineMap, machineId);
         }
+    }
+
+    public Map getOrderByMachineId(Long machineId, Integer page) {
+        Map<String, Object> params = new HashedMap();
+        if (machineId != null && !machineId.equals("")) {
+            params.put("machineId", machineId);
+        }
+        if (page == null) {
+            page = 1;
+        }
+        PageHelper.startPage(Integer.valueOf(page), 10);
+        List<OrderInfo> list = orderInfoMapper.selectByMachineForPage(params);
+        PageInfo pageInfo = new PageInfo(list);
+        Map<String, Object> map = new HashedMap();
+        map.put("data", pageInfo.getList());
+        map.put("pageNum", pageInfo.getPageNum());
+        map.put("nextPage", pageInfo.getNextPage());
+        map.put("prePage", pageInfo.getPrePage());
+        map.put("total", pageInfo.getTotal());
+        return map;
     }
 
 

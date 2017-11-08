@@ -113,4 +113,14 @@
         SELECT <include refid="columns"/> FROM order_info WHERE order_info.machine_id=#{machineId} ORDER BY order_info.create_time DESC LIMIT 1
     </select>
 
+    <select id="selectByMachineForPage" resultMap="OrderInfoMap" parameterType="Map">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        order_info
+        WHERE
+        order_info.machine_id = #{machineId}
+        AND order_info.`status` = 3
+    </select>
+
 </mapper>

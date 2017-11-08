@@ -12,6 +12,7 @@ import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import com.dollapi.vo.OrderVO;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,16 @@ public class OrderController extends BaseController {
         UserInfo user = getUserInfo(token);
         orderService.callBack(user, machineId, orderId, result);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/getOrderByMachineId")
+    public Results getOrderByMachineId(HttpServletRequest request) {
+        Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId"));
+        Integer page = request.getParameter("page") == null ? null : Integer.valueOf(request.getParameter("page"));
+        validParamsNotNull(machineId, page);
+        Map<String, Object> map = new HashedMap();
+        map = orderService.getOrderByMachineId(machineId, page);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), map);
     }
 
 }

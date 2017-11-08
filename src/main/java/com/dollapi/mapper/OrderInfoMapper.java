@@ -22,9 +22,12 @@ public interface OrderInfoMapper {
 
     public List<OrderInfo> selectAllOrder(Map<String, Object> params);
 
-    public List<OrderInfo> selectByMachineId(Long machineId);
+    public List<OrderInfo> selectByMachineId(Map<String, Object> params);
 
     public OrderInfo selectOneByMachineId(Long machineId);
+
+    public List<OrderInfo> selectByMachineForPage(Map<String, Object> params);
+
 
 
 }
