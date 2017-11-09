@@ -239,6 +239,7 @@ public class OrderService {
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
         param.setDesc(p.getPackageName() + "充值" + p.getPrice().toString() + "获得" + p.getGameMoney().toString() + "游戏币");
+        param.setMoney("0.01");
 
         String payInfo = api.pay(param, 10, "");
         return payInfo;
@@ -323,7 +324,7 @@ public class OrderService {
             //是当前玩家
             if (machineInfo.getStatus().equals(2)) {
                 //游戏中
-                throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+                throw new DollException(ApiContents.IS_YOUR.value(), ApiContents.IS_YOUR.desc());
             } else {
                 //当前玩家进入游戏
 //                userLineList.remove(0);
