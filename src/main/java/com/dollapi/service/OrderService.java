@@ -95,6 +95,9 @@ public class OrderService {
             orderInfo.setMachineId(machineId);
             orderInfo.setMachineName(machineInfo.getMachineName());
             orderInfo.setGameMoneyPrice(machineInfo.getGameMoney());
+            orderInfo.setDollImg(machineInfo.getDollImg());
+            orderInfo.setDollName(machineInfo.getDollName());
+
             // FIXME: 2017/9/10 这里使用枚举
             orderInfo.setStatus(1);
 
@@ -234,8 +237,8 @@ public class OrderService {
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
 //        api.notifyUrl("legendream.cn  成功回调");
+        api.notifyUrl("http://47.94.236.45:9900/order/rechargeCallBack");
 //        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
-        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
         PayParam param = new PayParam();
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
