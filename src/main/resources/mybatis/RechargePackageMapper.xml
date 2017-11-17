@@ -65,4 +65,8 @@
         FROM recharge_package WHERE recharge_package.id=#{id} LIMIT 1
     </select>
 
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM recharge_package WHERE recharge_package.id=#{id}
+    </delete>
+
 </mapper> 

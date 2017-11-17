@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+<nav class="nav navbar-inverse navbar-fixed-top" role="navgation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav nav">
+                <li><a href="#">首页</a></li>
+                <li ><a href="/admin/user/userList">用户列表</a></li>
+                <li><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li ><a href="/admin/order/orderList">订单列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
+                <li class="active"><a href="/admin/order/rechargeOrderList">充值列表</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="form-group">
+    <form method="POST" action="/admin/order/rechargeOrderList">
+        <label for="exampleInputEmail1">充值编号</label>
+        <input id="id" name="id" type="text" value="$!{id}"/>
+        <label for="exampleInputEmail1">用户编号</label>
+        <input id="userId" name="userId" type="text" value="$!{userId}"/>
+        <input type="submit" value="搜索"/>
+    </form>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <td>编号</td>
+                    <td>用户</td>
+                    <td>套餐</td>
+                    <td>价格</td>
+                    <td>游戏币</td>
+                    <td>支付流水</td>
+                    <td>状态</td>
+                    <td>时间</td>
+                </tr>
+                </thead>
+                <tbody>
+                    #foreach($order in $list)
+                    <tr>
+                        <td>$order.id</td>
+                        <td>$order.userName</td>
+                        <td>$order.packageName</td>
+                        <td>$order.price</td>
+                        <td>$order.gameMoney</td>
+                        <td>$order.outPayOrder</td>
+                        <td>$order.status</td>
+                        <td>$date.format('yyyy-MM-dd HH:mm:ss ',$order.createTime)</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="dropdown pull-right">
+
+    第 $pageNum 页
+    #if($pageNum!=1)
+        <a href="/admin/order/rechargeOrderList?page=$prePage">上一页</a>
+    #end
+    #if($pageNum!=$nextPage)
+        <a href="/admin/order/rechargeOrderList?page=$nextPage">下一页</a>
+    #end
+
+    跳转到
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        $pageNum
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        #foreach($n in $numbers)
+            <li><a href="/admin/order/rechargeOrderList?page=$n">$n</a></li>
+        #end
+    </ul>
+</div>
+
+
+</body>
+</html>
+

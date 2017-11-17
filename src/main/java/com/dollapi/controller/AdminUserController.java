@@ -1,6 +1,8 @@
 package com.dollapi.controller;
 
+import com.dollapi.domain.UserAdress;
 import com.dollapi.domain.UserInfo;
+import com.dollapi.mapper.UserAdressMapper;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
@@ -38,6 +40,9 @@ public class AdminUserController {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private UserAdressMapper userAdressMapper;
 
     @RequestMapping("/userList")
     public String userList(ModelMap map, HttpServletRequest request) {
@@ -80,7 +85,9 @@ public class AdminUserController {
     public String getUserInfo(ModelMap map, HttpServletRequest request) {
         Long userId = Long.valueOf(request.getParameter("userId"));
         UserInfo user = userInfoMapper.selectUserById(userId);
+        List<UserAdress> adressList = userAdressMapper.selectByUserId(user.getId());
         map.addAttribute("user", user);
+        map.addAttribute("adressList", adressList);
         map.put("date", new DateTool());
         return "userInfo";
     }
@@ -104,7 +111,6 @@ public class AdminUserController {
         userInfoMapper.update(user);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
-
 
 
 }

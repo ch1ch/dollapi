@@ -19,4 +19,6 @@ public interface RechargePackageMapper {
 
     public RechargePackage selectById(Long id);
 
+    public void deleteById(Long id);
+
 }

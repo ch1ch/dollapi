@@ -6,6 +6,8 @@ import com.dollapi.domain.RechargePackage;
 import com.dollapi.mapper.OrderInfoMapper;
 import com.dollapi.mapper.RechargeOrderMapper;
 import com.dollapi.mapper.RechargePackageMapper;
+import com.dollapi.util.ApiContents;
+import com.dollapi.util.Results;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections.map.HashedMap;
@@ -14,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,14 +120,74 @@ public class AdminOrderController {
         return "rechargePackage";
     }
 
-    @RequestMapping("/rechargeOrderList")
-    public String rechargeOrderList(ModelMap map, HttpServletRequest request) {
+    @RequestMapping("/addRechargePackageUI")
+    public String addRechargePackageUI(ModelMap map, HttpServletRequest request) {
+        return "addRechargePackage";
+    }
+
+    @RequestMapping("/addRechargePackage")
+    @ResponseBody
+    public Results addRechargePackage(HttpServletRequest request) {
+        RechargePackage p = new RechargePackage();
+
+        String packageName = request.getParameter("packageName").toString();
+        BigDecimal price = new BigDecimal(request.getParameter("price").toString());
+        Long gameMoney = Long.valueOf(request.getParameter("gameMoney").toString());
+
+        p.setPackageName(packageName);
+        p.setPrice(price);
+        p.setGameMoney(gameMoney);
+        p.setStatus(1);
+        rechargePackageMapper.save(p);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/deletePackage")
+    public String deletePackage(ModelMap map, HttpServletRequest request) {
+        Long id = Long.valueOf(request.getParameter("id").toString());
+        rechargePackageMapper.deleteById(id);
         String page = request.getParameter("page");
         if (page == null) {
             page = "1";
         }
         PageHelper.startPage(Integer.valueOf(page), 10);
-        List<RechargeOrder> list = rechargeOrderMapper.selectAllRechargeOrder();
+        List<RechargePackage> list = rechargePackageMapper.selectAllPackage();
+        PageInfo pageInfo = new PageInfo(list);
+        List<String> numbers = new ArrayList<>();
+        for (int i = 1; i <= pageInfo.getPages(); i++) {
+            numbers.add(String.valueOf(i));
+        }
+
+        map.addAttribute("list", pageInfo.getList());
+        map.addAttribute("pageNum", pageInfo.getPageNum());
+        map.addAttribute("nextPage", pageInfo.getNextPage());
+        map.addAttribute("prePage", pageInfo.getPrePage());
+        map.addAttribute("numbers", numbers);
+        map.put("date", new DateTool());
+        return "rechargePackageList";
+    }
+
+    @RequestMapping("/rechargeOrderList")
+    public String rechargeOrderList(ModelMap map, HttpServletRequest request) {
+
+        Long userId = request.getParameter("userId") == null || request.getParameter("userId").toString().equals("") ? null : Long.valueOf(request.getParameter("userId"));
+        String id = request.getParameter("id") == null ? null : request.getParameter("id");
+
+        Map<String, Object> params = new HashedMap();
+        if (userId != null && userId > 0) {
+            params.put("userId", userId);
+        }
+        if (id != null && !id.equals("")) {
+            params.put("id", id);
+        }
+
+        String page = request.getParameter("page");
+        if (page == null) {
+            page = "1";
+        }
+
+        PageHelper.startPage(Integer.valueOf(page), 10);
+        List<RechargeOrder> list = rechargeOrderMapper.selectAllRechargeOrder(params);
         PageInfo pageInfo = new PageInfo(list);
         List<String> numbers = new ArrayList<>();
         for (int i = 1; i <= pageInfo.getPages(); i++) {

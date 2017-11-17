@@ -49,7 +49,7 @@ public class AdminMachineController {
         if (page == null) {
             page = "1";
         }
-        PageHelper.startPage(Integer.valueOf(page), 3);
+        PageHelper.startPage(Integer.valueOf(page), 10);
         List<MachineInfo> list = machineInfoMapper.selectAll();
         PageInfo pageInfo = new PageInfo(list);
 
@@ -114,7 +114,7 @@ public class AdminMachineController {
     }
 
     @RequestMapping(value = "uploadDollImg")
-    public String uploadDollImg(@RequestParam("test") MultipartFile file, HttpServletRequest request, ModelMap map) throws IOException {
+    public String uploadDollImg(@RequestParam("file") MultipartFile file, HttpServletRequest request, ModelMap map) throws IOException {
         Long machineId = Long.valueOf(request.getParameter("machineId"));
         String fileUrl = ImageUploadTools.uploadQrFile(UUID.randomUUID().toString().replaceAll("-", "") + ".jpg", file.getInputStream(), USER_HEAD_IMAGE_PATH);
         MachineInfo machineInfo = machineInfoMapper.selectById(machineId);

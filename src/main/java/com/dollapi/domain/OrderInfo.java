@@ -117,6 +117,9 @@ public class OrderInfo {
     }
 
     public Integer getStatus() {
+        if (status == 1) {
+            status = 2;
+        }
         return status;
     }
 

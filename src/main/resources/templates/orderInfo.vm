@@ -29,10 +29,11 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav nav">
                 <li><a href="#">首页</a></li>
-                <li class="active"><a href="/admin/user/userList">用户列表</a></li>
+                <li ><a href="/admin/user/userList">用户列表</a></li>
                 <li><a href="/admin/machine/getMachineList">机器列表</a></li>
-                <li><a href="/admin/order/orderList">订单列表</a></li>
+                <li class="active"><a href="/admin/order/orderList">订单列表</a></li>
                 <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
+                <li><a href="/admin/order/rechargeOrderList">充值列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
         ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
@@ -52,50 +53,68 @@
 <div class="container">
     <div class="form-group">
         <label for="exampleInputEmail1">编号</label>
-        <input id="id" name="id" type="text" value="$order.id"/>
+        <input id="id" name="id" type="hidden" value="$order.id"/>
+        $order.id
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">用户id</label>
-        <input id="userId" name="userId" type="text" value="$order.userId"/>
+        <input id="userId" name="userId" type="hidden" value="$order.userId"/>
+        $order.userId
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">用户名</label>
-        <input id="userName" name="userName" type="text" value="$order.userName"/>
+        <input id="userName" name="userName" type="hidden" value="$order.userName"/>
+        $order.userName
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">机器id</label>
-        <input id="machineId" name="machineId" type="text" value="$order.machineId"/>
+        <input id="machineId" name="machineId" type="hidden" value="$order.machineId"/>
+        $order.machineId
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">机器名</label>
-        <input id="machineName" name="machineName" type="text" value="$order.machineName"/>
+        <input id="machineName" name="machineName" type="hidden" value="$order.machineName"/>
+        $order.machineName
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">游戏币</label>
-        <input id="gameMoneyPrice" name="gameMoneyPrice" type="text" value="$order.gameMoneyPrice"/>
+        <input id="gameMoneyPrice" name="gameMoneyPrice" type="hidden" value="$order.gameMoneyPrice"/>
+        $order.dollName
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">娃娃名</label>
-        <input id="dollName" name="dollName" type="text" value="$order.dollName"/>
+        <input id="dollName" name="dollName" type="hidden" value="$order.dollName"/>
+        $order.dollName
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">状态</label>
-        <input id="status" name="status" type="text" value="$order.status"/>
+        <input id="status" name="status" type="hidden" value="$order.status"/>
+        #if($order.status==1)
+            未抓到
+        #end
+        #if($order.status==2)
+            未抓到
+        #end
+        #if($order.status==3)
+            抓到
+        #end
+
     </div>
 
     <div class="form-group">
         <label for="exampleInputEmail1">时间</label>
-        <input id="createTime" name="createTime" type="text" value="$date.format('yyyy-MM-dd HH:mm:ss ',$order.createTime)"/>
+        <input id="createTime" name="createTime" type="hidden" value="$date.format('yyyy-MM-dd HH:mm:ss ',$order.createTime)"/>
+        $date.format('yyyy-MM-dd HH:mm:ss ',$order.createTime)
     </div>
 
-    <button type="button" class="btn btn-primary" onclick="updateOrder()">保存</button>
+##    <button type="button" class="btn btn-primary" onclick="javasctript:">返回</button>
 
 
 </div>
@@ -105,34 +124,34 @@
 </html>
 
 <script type="text/javascript">
-    function updateOrder() {
-        var id = $("#id").val();
-        var nickName = $("#nickName").val();
-        var userLevel = $("#userLevel").val();
-        var phoneNumber = $("#phoneNumber").val();
-        var userPoint = $("#userPoint").val();
-        var gameMoney = $("#gameMoney").val();
-        $.ajax({
-            type: "POST",
-            data: {
-                id: id,
-                nickName: nickName,
-                userLevel: userLevel,
-                phoneNumber: phoneNumber,
-                userPoint: userPoint,
-                gameMoney: gameMoney
-            },
-            url: "/admin/user/updateUserInfo",
-            success: function (data) {
-                if (data.code == 200) {
-                    alert("操作成功");
-                } else {
-                    alert("操作失败");
-                }
-            },
-            error: function (data) {
-                alert("操作失败");
-            }
-        });
-    }
+//    function updateOrder() {
+//        var id = $("#id").val();
+//        var nickName = $("#nickName").val();
+//        var userLevel = $("#userLevel").val();
+//        var phoneNumber = $("#phoneNumber").val();
+//        var userPoint = $("#userPoint").val();
+//        var gameMoney = $("#gameMoney").val();
+//        $.ajax({
+//            type: "POST",
+//            data: {
+//                id: id,
+//                nickName: nickName,
+//                userLevel: userLevel,
+//                phoneNumber: phoneNumber,
+//                userPoint: userPoint,
+//                gameMoney: gameMoney
+//            },
+//            url: "/admin/user/updateUserInfo",
+//            success: function (data) {
+//                if (data.code == 200) {
+//                    alert("操作成功");
+//                } else {
+//                    alert("操作失败");
+//                }
+//            },
+//            error: function (data) {
+//                alert("操作失败");
+//            }
+//        });
+//    }
 </script>
