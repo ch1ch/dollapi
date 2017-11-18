@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.ExpressMapper">
+    <!-- machine_info query field-->
+    <sql id="columns">
+        id,
+        order_id,
+        adress_id,
+        user_id,
+        out_order_id,
+        status,
+        create_time
+    </sql>
+
+    <!-- machine_info result map-->
+    <resultMap type="com.dollapi.domain.Express" id="ExpressMap">
+        <result column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="adress_id" property="adressId"/>
+        <result column="user_id" property="userId"/>
+        <result column="out_order_id" property="outOrderId"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save machine_info -->
+    <insert id="save" parameterType="com.dollapi.domain.Express">
+        insert into machine_info (
+        <include refid="columns"/>)
+        values (
+        #{id},
+        #{orderId},
+        #{adressId},
+        #{userId},
+        #{outOrderId},
+        #{status},
+        Now()
+        )
+    </insert>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="ExpressMap">
+        SELECT <include refid="columns"/> FROM express WHERE express.user_id=#{userId}
+    </select>
+
+</mapper>

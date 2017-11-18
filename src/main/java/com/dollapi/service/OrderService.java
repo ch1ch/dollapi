@@ -54,6 +54,9 @@ public class OrderService {
     @Autowired
     private RechargePackageMapper rechargePackageMapper;
 
+    @Autowired
+    private ExpressMapper expressMapper;
+
     @Value("${aliAppId}")
     private String aliAppId;
 
@@ -67,7 +70,7 @@ public class OrderService {
     private String aliPublicKey;
 
 
-    private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
+//    private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
 //    private static boolean inGame = true;
 
@@ -77,7 +80,7 @@ public class OrderService {
 
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
-            isUserLine(userInfo.getId(), machineInfo);
+//            isUserLine(userInfo.getId(), machineInfo);
             // FIXME: 2017/9/10 这里用枚举
             if (machineInfo.getStatus().equals(2)) {
                 throw new DollException(ApiContents.MACHINE_USED.value(), ApiContents.MACHINE_USED.desc());
@@ -140,6 +143,17 @@ public class OrderService {
 
     }
 
+    public boolean canCreateOrder(UserInfo userInfo, Long machineId) {
+        MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
+        if (machineInfo.getStatus().equals(2)) {
+            throw new DollException(ApiContents.MACHINE_USED.value(), ApiContents.MACHINE_USED.desc());
+        }
+        if (userInfo.getGameMoney() < machineInfo.getGameMoney()) {
+            throw new DollException(ApiContents.USER_GOME_MONEY_NULL.value(), ApiContents.USER_GOME_MONEY_NULL.desc());
+        }
+        return true;
+    }
+
     public void callBack(UserInfo userInfo, Long machineId, String orderId, Integer result) {
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
@@ -157,14 +171,14 @@ public class OrderService {
             }
             orderInfoMapper.update(orderInfo);
 
-            List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
-            if (userLineList != null && userLineList.size() > 0) {
-                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-                userLineList.remove(0);
-                userLineMap.put(machineId, userLineList);
-                updateWilddogData(userLineMap, machineId);
-//
-            }
+//            List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
+//            if (userLineList != null && userLineList.size() > 0) {
+//                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//                userLineList.remove(0);
+//                userLineMap.put(machineId, userLineList);
+//                updateWilddogData(userLineMap, machineId);
+////
+//            }
 
 
         } catch (Exception e) {
@@ -237,7 +251,7 @@ public class OrderService {
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
 //        api.notifyUrl("legendream.cn  成功回调");
-        api.notifyUrl("http://47.94.236.45:9900/order/rechargeCallBack");
+        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
 //        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
         PayParam param = new PayParam();
         param.setSubject(p.getPackageName());
@@ -274,69 +288,69 @@ public class OrderService {
         rechargeOrderMapper.update(order);
     }
 
-    private void isUserLine(Long userId, MachineInfo machineInfo) {
-        List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
-        if (userLineList == null || userLineList.size() == 0) {
-            //队列为空
-            if (machineInfo.getStatus().equals(2)) {
-                //游戏机使用中，加入队列，更新野狗数据
-                userLineList = new ArrayList<>();
-                UserLine userLine = new UserLine();
-                userLine.setUserId(userId);
-                userLine.setCreateTime(new Date());
-                userLineList.add(userLine);
-                userLineMap.put(machineInfo.getId(), userLineList);
-
-                updateWilddogData(userLineMap, machineInfo.getId());
-
-                throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
-            } else {
-                userLineList = new ArrayList<>();
-                UserLine userLine = new UserLine();
-                userLine.setUserId(userId);
-                userLine.setCreateTime(new Date());
-                userLineList.add(userLine);
-                userLineMap.put(machineInfo.getId(), userLineList);
-
-                updateWilddogData(userLineMap, machineInfo.getId());
-                return;
-            }
-        }
-        userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-        if (!userId.equals(userLineList.get(0).getUserId())) {
-            //不是当前玩家
-            boolean haveUser = false;
-            for (UserLine userLine : userLineList) {
-                if (userLine.getUserId().equals(userId)) {
-                    haveUser = true;
-                }
-            }
-
-            if (!haveUser) {
-                //加入队列,更新野狗数据
-                UserLine thisUser = new UserLine();
-                thisUser.setUserId(userId);
-                thisUser.setCreateTime(new Date());
-                userLineList.add(thisUser);
-                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-                updateWilddogData(userLineMap, machineInfo.getId());
-                userLineMap.put(machineInfo.getId(), userLineList);
-            }
-
-            throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
-        } else {
-            //是当前玩家
-            if (machineInfo.getStatus().equals(2)) {
-                //游戏中
-                throw new DollException(ApiContents.IS_YOUR.value(), ApiContents.IS_YOUR.desc());
-            } else {
-                //当前玩家进入游戏
-//                userLineList.remove(0);
+//    private void isUserLine(Long userId, MachineInfo machineInfo) {
+//        List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
+//        if (userLineList == null || userLineList.size() == 0) {
+//            //队列为空
+//            if (machineInfo.getStatus().equals(2)) {
+//                //游戏机使用中，加入队列，更新野狗数据
+//                userLineList = new ArrayList<>();
+//                UserLine userLine = new UserLine();
+//                userLine.setUserId(userId);
+//                userLine.setCreateTime(new Date());
+//                userLineList.add(userLine);
 //                userLineMap.put(machineInfo.getId(), userLineList);
+//
 //                updateWilddogData(userLineMap, machineInfo.getId());
-            }
-        }
-    }
+//
+//                throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+//            } else {
+//                userLineList = new ArrayList<>();
+//                UserLine userLine = new UserLine();
+//                userLine.setUserId(userId);
+//                userLine.setCreateTime(new Date());
+//                userLineList.add(userLine);
+//                userLineMap.put(machineInfo.getId(), userLineList);
+//
+//                updateWilddogData(userLineMap, machineInfo.getId());
+//                return;
+//            }
+//        }
+//        userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//        if (!userId.equals(userLineList.get(0).getUserId())) {
+//            //不是当前玩家
+//            boolean haveUser = false;
+//            for (UserLine userLine : userLineList) {
+//                if (userLine.getUserId().equals(userId)) {
+//                    haveUser = true;
+//                }
+//            }
+//
+//            if (!haveUser) {
+//                //加入队列,更新野狗数据
+//                UserLine thisUser = new UserLine();
+//                thisUser.setUserId(userId);
+//                thisUser.setCreateTime(new Date());
+//                userLineList.add(thisUser);
+//                userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//                updateWilddogData(userLineMap, machineInfo.getId());
+//                userLineMap.put(machineInfo.getId(), userLineList);
+//            }
+//
+//            throw new DollException(ApiContents.PUT_USER_LINE.value(), ApiContents.PUT_USER_LINE.desc());
+//        } else {
+//            //是当前玩家
+//            if (machineInfo.getStatus().equals(2)) {
+//                //游戏中
+//                throw new DollException(ApiContents.IS_YOUR.value(), ApiContents.IS_YOUR.desc());
+//            } else {
+//                //当前玩家进入游戏
+////                userLineList.remove(0);
+////                userLineMap.put(machineInfo.getId(), userLineList);
+////                updateWilddogData(userLineMap, machineInfo.getId());
+//            }
+//        }
+//    }
 
     private void updateWilddogData(Map<Long, List<UserLine>> userLineMap, Long machineId) {
         WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
@@ -350,40 +364,40 @@ public class OrderService {
         ref.child(machineId.toString()).setValue(map);
     }
 
-    @Scheduled(cron = "0/10 * *  * * ? ")
-    private void outLine() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        for (Long key : userLineMap.keySet()) {
-            MachineInfo machineInfo = machineInfoMapper.selectById(key);
-            if (machineInfo.getStatus().equals(2)) {
-                OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(key);
-                if (orderInfo != null && (90 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
-                    machineInfo.setStatus(1);
-                    machineInfoMapper.update(machineInfo);
-                    removeOne(key);
-                }
-            } else {
-                List<UserLine> userLineList = userLineMap.get(key);
-                if (userLineList != null && userLineList.size() > 0) {
-                    userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-                    if (10 < ((new Date().getTime() - userLineList.get(0).getCreateTime().getTime()) / 1000)) {
-                        System.out.println(sdf.format(new Date()));
-                        removeOne(key);
-                    }
-                }
-            }
-        }
-    }
-
-    private void removeOne(Long machineId) {
-        List<UserLine> userLineList = userLineMap.get(machineId);
-        if (userLineList != null && userLineList.size() > 0) {
-            userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-            userLineList.remove(0);
-            userLineMap.put(machineId, userLineList);
-            updateWilddogData(userLineMap, machineId);
-        }
-    }
+//    @Scheduled(cron = "0/10 * *  * * ? ")
+//    private void outLine() {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        for (Long key : userLineMap.keySet()) {
+//            MachineInfo machineInfo = machineInfoMapper.selectById(key);
+//            if (machineInfo.getStatus().equals(2)) {
+//                OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(key);
+//                if (orderInfo != null && (90 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
+//                    machineInfo.setStatus(1);
+//                    machineInfoMapper.update(machineInfo);
+//                    removeOne(key);
+//                }
+//            } else {
+//                List<UserLine> userLineList = userLineMap.get(key);
+//                if (userLineList != null && userLineList.size() > 0) {
+//                    userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//                    if (10 < ((new Date().getTime() - userLineList.get(0).getCreateTime().getTime()) / 1000)) {
+//                        System.out.println(sdf.format(new Date()));
+//                        removeOne(key);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    private void removeOne(Long machineId) {
+//        List<UserLine> userLineList = userLineMap.get(machineId);
+//        if (userLineList != null && userLineList.size() > 0) {
+//            userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
+//            userLineList.remove(0);
+//            userLineMap.put(machineId, userLineList);
+//            updateWilddogData(userLineMap, machineId);
+//        }
+//    }
 
     public Map getOrderByMachineId(Long machineId, Integer page) {
         Map<String, Object> params = new HashedMap();
@@ -404,6 +418,8 @@ public class OrderService {
         map.put("total", pageInfo.getTotal());
         return map;
     }
+
+
 
 
 }

@@ -3,15 +3,16 @@ package com.dollapi.controller;
 import com.common.pay.PayAPI;
 import com.common.pay.PayResult;
 import com.common.pay.common.JSON;
-import com.dollapi.domain.OrderInfo;
-import com.dollapi.domain.RechargeOrder;
-import com.dollapi.domain.RechargePackage;
-import com.dollapi.domain.UserInfo;
+import com.dollapi.domain.*;
+import com.dollapi.mapper.ExpressMapper;
 import com.dollapi.mapper.OrderInfoMapper;
 import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
 import com.dollapi.vo.OrderVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sun.jndi.cosnaming.ExceptionMapper;
 import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,9 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderInfoMapper orderInfoMapper;
 
+    @Autowired
+    private ExpressMapper expressMapper;
+
     @RequestMapping("/createOrder")
     public Results createOrder(HttpServletRequest request) {
         String token = request.getParameter("token");
@@ -47,6 +52,54 @@ public class OrderController extends BaseController {
         validParamsNotNull(token, machineId);
         String orderId = orderService.createOrder(getUserInfo(token), machineId);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), orderId);
+    }
+
+    @RequestMapping("/canCreateOrder")
+    public Results canCreateOrder(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId").toString());
+        validParamsNotNull(token, machineId);
+        orderService.canCreateOrder(getUserInfo(token), machineId);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/addExpress")
+    public Results addExpress(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        Long adressId = request.getParameter("adressId") == null ? null : Long.valueOf(request.getParameter("adressId").toString());
+        String orderId = request.getParameter("orderId");
+
+        validParamsNotNull(token, adressId, orderId);
+        Express express = new Express();
+        express.setOrderId(orderId);
+        express.setAdressId(adressId);
+        express.setUserId(getUserInfo(token).getId());
+        express.setStatus(1);
+        expressMapper.save(express);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/getExpressByUserId")
+    public Results getExpressByUserId(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        String page = request.getParameter("page");
+        if (page == null) {
+            page = "1";
+        }
+        PageHelper.startPage(Integer.valueOf(page), 10);
+        List<Express> list = expressMapper.selectByUserId(getUserInfo(token).getId());
+        PageInfo pageInfo = new PageInfo(list);
+        List<String> numbers = new ArrayList<>();
+        for (int i = 1; i <= pageInfo.getPages(); i++) {
+            numbers.add(String.valueOf(i));
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("rows", pageInfo.getList());
+        map.put("pageNum", pageInfo.getPageNum());
+        map.put("nextPage", pageInfo.getNextPage());
+        map.put("prePage", pageInfo.getPrePage());
+        map.put("numbers", numbers);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), map);
     }
 
     @RequestMapping("/getOrderById")
