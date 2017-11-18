@@ -89,16 +89,12 @@ public class OrderController extends BaseController {
         PageHelper.startPage(Integer.valueOf(page), 10);
         List<Express> list = expressMapper.selectByUserId(getUserInfo(token).getId());
         PageInfo pageInfo = new PageInfo(list);
-        List<String> numbers = new ArrayList<>();
-        for (int i = 1; i <= pageInfo.getPages(); i++) {
-            numbers.add(String.valueOf(i));
-        }
+
         Map<String, Object> map = new HashMap<>();
         map.put("rows", pageInfo.getList());
         map.put("pageNum", pageInfo.getPageNum());
         map.put("nextPage", pageInfo.getNextPage());
         map.put("prePage", pageInfo.getPrePage());
-        map.put("numbers", numbers);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), map);
     }
 
@@ -173,9 +169,11 @@ public class OrderController extends BaseController {
 
     @RequestMapping("/callBack")
     public Results callBack(HttpServletRequest request) {
+
         Long machineId = request.getParameter("machineId") == null ? null : Long.valueOf(request.getParameter("machineId").toString());
         String orderId = request.getParameter("orderId") == null ? null : request.getParameter("orderId").toString();
         Integer result = request.getParameter("result") == null ? null : Integer.valueOf(request.getParameter("result").toString());
+        logger.info("===================================收到游戏回调===================================" + machineId.toString() + " " + orderId + " " + result);
         String token = request.getParameter("token");
         UserInfo user = getUserInfo(token);
         orderService.callBack(user, machineId, orderId, result);

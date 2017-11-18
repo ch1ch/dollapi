@@ -27,7 +27,7 @@
 
     <!-- save machine_info -->
     <insert id="save" parameterType="com.dollapi.domain.Express">
-        insert into machine_info (
+        insert into express (
         <include refid="columns"/>)
         values (
         #{id},

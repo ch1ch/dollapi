@@ -57,6 +57,8 @@ public class OrderService {
     @Autowired
     private ExpressMapper expressMapper;
 
+    private List<MachineInfo> allMachineInfo = null;
+
     @Value("${aliAppId}")
     private String aliAppId;
 
@@ -364,30 +366,30 @@ public class OrderService {
         ref.child(machineId.toString()).setValue(map);
     }
 
-//    @Scheduled(cron = "0/10 * *  * * ? ")
-//    private void outLine() {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//        for (Long key : userLineMap.keySet()) {
-//            MachineInfo machineInfo = machineInfoMapper.selectById(key);
-//            if (machineInfo.getStatus().equals(2)) {
-//                OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(key);
-//                if (orderInfo != null && (90 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
-//                    machineInfo.setStatus(1);
-//                    machineInfoMapper.update(machineInfo);
-//                    removeOne(key);
-//                }
-//            } else {
-//                List<UserLine> userLineList = userLineMap.get(key);
-//                if (userLineList != null && userLineList.size() > 0) {
-//                    userLineList.sort((UserLine l1, UserLine l2) -> l1.getCreateTime().compareTo(l2.getCreateTime()));
-//                    if (10 < ((new Date().getTime() - userLineList.get(0).getCreateTime().getTime()) / 1000)) {
-//                        System.out.println(sdf.format(new Date()));
-//                        removeOne(key);
-//                    }
-//                }
-//            }
-//        }
-//    }
+    @Scheduled(cron = "0/5 * *  * * ? ")
+    private void outLine() {
+        if (allMachineInfo == null || allMachineInfo.size() < 1) {
+            allMachineInfo = machineInfoMapper.selectAll();
+        }
+        for (MachineInfo machineInfo : allMachineInfo) {
+            if (machineInfo.getStatus().equals(2)) {
+                OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(machineInfo.getId());
+                if (orderInfo != null && (65 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
+                    machineInfo.setStatus(1);
+                    machineInfoMapper.update(machineInfo);
+                    orderInfo.setStatus(2);
+                    orderInfoMapper.update(orderInfo);
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0/10 * * * ? ")
+    private void updataAllMachineInfo() {
+        allMachineInfo = machineInfoMapper.selectAll();
+    }
+
+
 //
 //    private void removeOne(Long machineId) {
 //        List<UserLine> userLineList = userLineMap.get(machineId);
@@ -418,8 +420,6 @@ public class OrderService {
         map.put("total", pageInfo.getTotal());
         return map;
     }
-
-
 
 
 }
