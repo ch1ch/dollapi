@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace must point Dao interface -->
+<mapper namespace="com.dollapi.mapper.InvitationMapper">
+    <!-- machine_info query field-->
+    <sql id="columns">
+        user_id,
+        recommend_user_id,
+        game_mony,
+        create_time
+    </sql>
+
+    <!-- machine_info result map-->
+    <resultMap type="com.dollapi.domain.Invitation" id="InvitationMap">
+        <result column="user_id" property="userId"/>
+        <result column="recommend_user_id" property="recommendUserId"/>
+        <result column="game_mony" property="gameMony"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- save machine_info -->
+    <insert id="save" parameterType="com.dollapi.domain.Invitation">
+        insert into invitation (
+        <include refid="columns"/>)
+        values (
+        #{userId},
+        #{recommendUserId},
+        #{gameMony},
+        Now()
+        )
+    </insert>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="InvitationMap">
+        SELECT <include refid="columns"/> FROM invitation WHERE invitation.user_id=#{userId}
+    </select>
+
+
+</mapper>

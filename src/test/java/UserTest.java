@@ -24,14 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@Transactional
+//@Transactional
 public class UserTest {
 
     @Autowired
@@ -132,6 +129,18 @@ public class UserTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date d = sdf.parse("2017-11-06 18:48:00");
         System.out.println((new Date().getTime() - d.getTime()) / 1000);
+    }
+
+    @Test
+    public void updateCode() {
+        Map<String, Object> params = new HashMap<>();
+        List<UserInfo> list = userInfoMapper.selectAllUser(params);
+        for (UserInfo userInfo : list) {
+            if (userInfo.getInvitationCode() == null || userInfo.getInvitationCode().equals("")) {
+                userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
+                userInfoMapper.update(userInfo);
+            }
+        }
     }
 
 

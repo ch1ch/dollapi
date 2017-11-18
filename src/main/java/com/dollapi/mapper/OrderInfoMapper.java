@@ -28,6 +28,6 @@ public interface OrderInfoMapper {
 
     public List<OrderInfo> selectByMachineForPage(Map<String, Object> params);
 
-
+    public List<OrderInfo> selectByIds( Map<String,Object> params);
 
 }

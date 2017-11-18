@@ -51,5 +51,9 @@
         SELECT <include refid="columns"/> FROM user_adress WHERE user_adress.user_id=#{userId}
     </select>
 
+    <select id="selectById" parameterType="Long" resultMap="UserAdressMap">
+        SELECT <include refid="columns"/> FROM user_adress WHERE user_adress.id=#{id}
+    </select>
+
 
 </mapper> 

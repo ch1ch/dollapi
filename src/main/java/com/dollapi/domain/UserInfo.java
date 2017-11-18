@@ -75,6 +75,16 @@ public class UserInfo {
      */
     private Date createTime;
 
+    private String invitationCode;
+
+    public String getInvitationCode() {
+        return invitationCode;
+    }
+
+    public void setInvitationCode(String invitationCode) {
+        this.invitationCode = invitationCode;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

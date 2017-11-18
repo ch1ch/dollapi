@@ -21,6 +21,8 @@ public interface UserInfoMapper {
 
     public UserInfo selectByToken(String token);
 
+    public UserInfo selectByCode(String code);
+
 
 //    ============================UI===================================
 

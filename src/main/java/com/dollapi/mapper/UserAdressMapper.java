@@ -16,4 +16,6 @@ public interface UserAdressMapper {
 
     List<UserAdress> selectByUserId(Long userId);
 
+    UserAdress selectById(Long id);
+
 }

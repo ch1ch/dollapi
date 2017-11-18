@@ -1,19 +1,16 @@
-package com.dollapi.domain;
-
-import java.util.Date;
+package com.dollapi.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class OrderInfo {
+import java.util.Date;
 
-    public OrderInfo() {
+public class OrderExpress {
 
-    }
 
     /**
      *
      */
-    private String id;
+    private Long id;
 
     /**
      *
@@ -64,14 +61,72 @@ public class OrderInfo {
      */
     private Date createTime;
 
+    private String expressOutOrderId;
+    // 1申请  2已经邮寄 3签收
+    private Integer expressStatus;
 
 
-    public void setId(String id) {
-        this.id = id;
+    /**
+     *
+     */
+    private String person;
+
+    /**
+     *
+     */
+    private String mobile;
+
+    /**
+     *
+     */
+    private String address;
+
+    public String getExpressOutOrderId() {
+        return expressOutOrderId;
     }
 
-    public String getId() {
+    public void setExpressOutOrderId(String expressOutOrderId) {
+        this.expressOutOrderId = expressOutOrderId;
+    }
+
+    public Integer getExpressStatus() {
+        return expressStatus;
+    }
+
+    public void setExpressStatus(Integer expressStatus) {
+        this.expressStatus = expressStatus;
+    }
+
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setUserId(Long userId) {

@@ -17,7 +17,8 @@
       doll_count,
       status,
       token,
-      create_time
+      create_time,
+      invitation_code
 	</sql>
 
     <!-- user_info result map-->
@@ -35,6 +36,7 @@
         <result column="status" property="status"/>
         <result column="token" property="token"/>
         <result column="create_time" property="createTime"/>
+        <result column="invitation_code" property="invitationCode"/>
     </resultMap>
 
     <!-- save user_info -->
@@ -54,7 +56,8 @@
         #{dollCount},
         #{status},
         #{token},
-        Now()
+        Now(),
+        #{invitationCode}
         )
     </insert>
 
@@ -73,6 +76,7 @@
             <if test="dollCount != null">doll_count = #{dollCount},</if>
             <if test="status != null">status = #{status},</if>
             <if test="token != null">token = #{token},</if>
+            <if test="invitationCode != null">invitation_code = #{invitationCode},</if>
         </set>
         WHERE id = #{id}
     </update>
@@ -99,6 +103,12 @@
         SELECT
         <include refid="columns"/>
         FROM user_info WHERE user_info.id=#{userId}
+    </select>
+
+    <select id="selectByCode" parameterType="String" resultMap="UserInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM user_info WHERE user_info.invitation_code=#{code}
     </select>
 
 </mapper> 

@@ -44,4 +44,8 @@
         SELECT <include refid="columns"/> FROM express WHERE express.user_id=#{userId}
     </select>
 
+    <select id="selectById" parameterType="Long" resultMap="ExpressMap">
+        SELECT <include refid="columns"/> FROM express WHERE express.id=#{id}
+    </select>
+
 </mapper>

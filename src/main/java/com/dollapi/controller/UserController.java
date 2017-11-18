@@ -2,6 +2,7 @@ package com.dollapi.controller;
 
 import com.dollapi.domain.UserAdress;
 import com.dollapi.domain.UserInfo;
+import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.service.UserService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -25,6 +28,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @Value("${tls.sdkappid}")
     private Long sdkAppId;
@@ -42,6 +48,8 @@ public class UserController extends BaseController {
         UserInfo userInfo = userService.WXLogin(code);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), userInfo);
     }
+
+
 
     @RequestMapping("/addUserAddress")
     public Results addUserAddress(HttpServletRequest request) {
@@ -85,14 +93,25 @@ public class UserController extends BaseController {
 
     @RequestMapping("/test")
     public Results test(HttpServletRequest request) {
-        String a=request.getParameter("a");
-        WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
-        WilddogApp.initializeApp(options);
-        SyncReference ref = WilddogSync.getInstance().getReference();
-        HashMap<String, Object> user = new HashMap<>();
-        user.put("1",15);
-        user.put("2",16);
-        ref.child("2").setValue(user);
+//        String a = request.getParameter("a");
+//        WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
+//        WilddogApp.initializeApp(options);
+//        SyncReference ref = WilddogSync.getInstance().getReference();
+//        HashMap<String, Object> user = new HashMap<>();
+//        user.put("1", 15);
+//        user.put("2", 16);
+//        ref.child("2").setValue(user);
+
+//        Map<String, Object> params = new HashMap<>();
+//        List<UserInfo> list = userInfoMapper.selectAllUser(params);
+//        for (UserInfo userInfo : list) {
+//            if (userInfo.getInvitationCode() == null || userInfo.getInvitationCode().equals("")) {
+//                userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
+//                userInfoMapper.update(userInfo);
+//            }
+//        }
+
+        System.out.println("========================okokokokok==============================");
 
 
 //        ref.child("Jobs").setValue(user, new SyncReference.CompletionListener() {
@@ -107,6 +126,15 @@ public class UserController extends BaseController {
 //        });
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
 
+    }
+
+    @RequestMapping("/invitation")
+    public Results invitation(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        String code = request.getParameter("code");
+        validParamsNotNull(token, code);
+        userService.invitation(getUserInfo(token), code);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
 

@@ -12,4 +12,6 @@ public interface ExpressMapper {
     public void save(Express express);
 
     public List<Express> selectByUserId(Long userId);
+
+    public Express selectById(Long id);
 }

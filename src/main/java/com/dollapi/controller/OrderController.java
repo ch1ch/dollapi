@@ -9,6 +9,7 @@ import com.dollapi.mapper.OrderInfoMapper;
 import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.vo.OrderExpress;
 import com.dollapi.vo.OrderVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -90,8 +91,10 @@ public class OrderController extends BaseController {
         List<Express> list = expressMapper.selectByUserId(getUserInfo(token).getId());
         PageInfo pageInfo = new PageInfo(list);
 
+
+        List<OrderExpress> relist = orderService.toExpress(list);
         Map<String, Object> map = new HashMap<>();
-        map.put("rows", pageInfo.getList());
+        map.put("rows", relist);
         map.put("pageNum", pageInfo.getPageNum());
         map.put("nextPage", pageInfo.getNextPage());
         map.put("prePage", pageInfo.getPrePage());

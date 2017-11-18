@@ -123,4 +123,8 @@
         AND order_info.`status` = 3
     </select>
 
+    <select id="selectByIds" resultMap="OrderInfoMap" parameterType="Map">
+        SELECT <include refid="columns"/> FROM order_info WHERE order_info.id IN (${ids})
+    </select>
+
 </mapper>

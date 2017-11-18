@@ -1,9 +1,11 @@
 package com.dollapi.service;
 
+import com.dollapi.domain.Invitation;
 import com.dollapi.domain.UserAdress;
 import com.dollapi.domain.UserInfo;
 import com.dollapi.domain.UserThird;
 import com.dollapi.exception.DollException;
+import com.dollapi.mapper.InvitationMapper;
 import com.dollapi.mapper.UserAdressMapper;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.mapper.UserThirdMapper;
@@ -52,6 +54,9 @@ public class UserService {
     @Value("${com.doll.secret}")
     private String secret;
 
+    @Autowired
+    private InvitationMapper invitationMapper;
+
 //    public UserService() {
 //        WilddogOptions options = new WilddogOptions.Builder().setSyncUrl("https://wd2620361786fgzrcs.wilddogio.com").build();
 //        WilddogApp.initializeApp(options);
@@ -97,6 +102,7 @@ public class UserService {
             // FIXME: 2017/10/2 100注册活动
             userInfo.setGameMoney(100L);
             userInfo.setHeadUrl(getWXImage(wxUserInfo.getHeadImgUrl(), UUID.randomUUID().toString().replaceAll("-", ""), ""));
+            userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
             userInfoMapper.save(userInfo);
 
             UserThird userThird = new UserThird();
@@ -147,7 +153,6 @@ public class UserService {
                 baos.write(tmp, 0, length);
             }
 
-
             headingUrl = ImageUploadTools.uploadQrFile(phone + ".jpg", new ByteArrayInputStream(baos.toByteArray()), USER_HEAD_IMAGE_PATH);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -155,6 +160,33 @@ public class UserService {
             e.printStackTrace();
         }
         return headingUrl;
+    }
+
+
+    public void invitation(UserInfo userInfo, String code) {
+        List<Invitation> ll = invitationMapper.selectByUserId(userInfo.getId());
+        if (ll != null && ll.size() > 0) {
+            throw new DollException(ApiContents.Invitation_ERROR.value(), ApiContents.Invitation_ERROR.desc());
+        }
+
+        UserInfo userInfo1 = userInfoMapper.selectByCode(code);
+
+        if (userInfo1 == null) {
+            throw new DollException(ApiContents.Invitation_CODE_ERROR.value(), ApiContents.Invitation_CODE_ERROR.desc());
+        }
+
+        Invitation invitation = new Invitation();
+        invitation.setUserId(userInfo.getId());
+        invitation.setRecommendUserId(userInfo1.getId());
+        invitation.setGameMony(70L);
+
+        userInfo.setGameMoney(userInfo.getGameMoney() + 70L);
+        userInfo1.setGameMoney(userInfo1.getGameMoney() + 70L);
+
+        userInfoMapper.update(userInfo);
+        userInfoMapper.update(userInfo1);
+
+        invitationMapper.save(invitation);
     }
 
 }

@@ -9,6 +9,7 @@ import com.dollapi.exception.DollException;
 import com.dollapi.mapper.*;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.vo.OrderExpress;
 import com.dollapi.vo.UserLine;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -25,6 +26,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service("orderService")
@@ -71,6 +74,8 @@ public class OrderService {
     @Value("${aliPublicKey}")
     private String aliPublicKey;
 
+    @Autowired
+    private UserAdressMapper userAdressMapper;
 
 //    private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
@@ -285,7 +290,27 @@ public class OrderService {
         order.setStatus(2);
         order.setOutPayOrder(tradeNo);
 
-        user.setGameMoney(user.getGameMoney() + order.getGameMoney());
+
+        //首冲活动
+        Long add = 0L;
+        List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectByUserId(user.getId());
+        if (rechargeOrderList == null || rechargeOrderList.size() == 0) {
+            if (order.getGameMoney() == 100) {
+                add = 100L;
+            } else if (order.getGameMoney() == 200) {
+                add = 120L;
+            } else if (order.getGameMoney() == 500) {
+                add = 150L;
+            } else if (order.getGameMoney() == 1000) {
+                add = 250L;
+            } else if (order.getGameMoney() == 5000) {
+                add = 500L;
+            } else if (order.getGameMoney() == 10000) {
+                add = 1000L;
+            }
+
+        }
+        user.setGameMoney(user.getGameMoney() + order.getGameMoney() + add);
         userInfoMapper.update(user);
         rechargeOrderMapper.update(order);
     }
@@ -419,6 +444,32 @@ public class OrderService {
         map.put("prePage", pageInfo.getPrePage());
         map.put("total", pageInfo.getTotal());
         return map;
+    }
+
+    public List<OrderExpress> toExpress(List<Express> expressList) {
+        List<OrderExpress> list = new ArrayList<>();
+
+
+        for (Express express : expressList) {
+            OrderInfo order = orderInfoMapper.selectById(express.getOrderId());
+            if (order != null) {
+                OrderExpress orderExpress = new OrderExpress();
+                BeanUtils.copyProperties(order, orderExpress);
+                orderExpress.setId(express.getId());
+                orderExpress.setExpressOutOrderId(express.getOutOrderId());
+                orderExpress.setExpressStatus(express.getStatus());
+
+                UserAdress userAdress = userAdressMapper.selectById(express.getAdressId());
+
+                orderExpress.setPerson(userAdress.getPerson());
+                orderExpress.setMobile(userAdress.getMobile());
+                orderExpress.setAddress(userAdress.getAddress());
+                list.add(orderExpress);
+            }
+        }
+
+        return list;
+
     }
 
 
