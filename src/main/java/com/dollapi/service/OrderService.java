@@ -458,6 +458,9 @@ public class OrderService {
                 orderExpress.setId(express.getId());
                 orderExpress.setExpressOutOrderId(express.getOutOrderId());
                 orderExpress.setExpressStatus(express.getStatus());
+                orderExpress.setOrderId(express.getOrderId());
+                orderExpress.setCreateTime(express.getCreateTime());
+
 
                 UserAdress userAdress = userAdressMapper.selectById(express.getAdressId());
 

@@ -1,13 +1,17 @@
 package com.dollapi.controller;
 
+import com.dollapi.domain.Express;
 import com.dollapi.domain.OrderInfo;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.RechargePackage;
+import com.dollapi.mapper.ExpressMapper;
 import com.dollapi.mapper.OrderInfoMapper;
 import com.dollapi.mapper.RechargeOrderMapper;
 import com.dollapi.mapper.RechargePackageMapper;
+import com.dollapi.service.OrderService;
 import com.dollapi.util.ApiContents;
 import com.dollapi.util.Results;
+import com.dollapi.vo.OrderExpress;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections.map.HashedMap;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +48,12 @@ public class AdminOrderController {
 
     @Autowired
     private RechargeOrderMapper rechargeOrderMapper;
+
+    @Autowired
+    private ExpressMapper expressMapper;
+
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping("/orderList")
     public String orderList(ModelMap map, HttpServletRequest request) {
@@ -210,6 +221,63 @@ public class AdminOrderController {
         map.addAttribute("order", order);
         map.put("date", new DateTool());
         return "rechargeOrder";
+    }
+
+    @RequestMapping("/expressList")
+    public String expressList(ModelMap map, HttpServletRequest request) {
+        String page = request.getParameter("page");
+        if (page == null) {
+            page = "1";
+        }
+        int siz = 50;
+        Integer status = request.getParameter("status") == null ? null : Integer.valueOf(request.getParameter("status"));
+        Map<String, Object> params = new HashMap<>();
+        if (status != null && status > 0) {
+            params.put("status", status);
+            siz = 200;
+        }
+
+        PageHelper.startPage(Integer.valueOf(page), siz);
+        List<Express> list = expressMapper.selectAll(params);
+        PageInfo pageInfo = new PageInfo(list);
+
+
+        List<OrderExpress> relist = orderService.toExpress(list);
+        List<String> numbers = new ArrayList<>();
+        for (int i = 1; i <= pageInfo.getPages(); i++) {
+            numbers.add(String.valueOf(i));
+        }
+        map.addAttribute("list", relist);
+        map.addAttribute("pageNum", pageInfo.getPageNum());
+        map.addAttribute("nextPage", pageInfo.getNextPage());
+        map.addAttribute("prePage", pageInfo.getPrePage());
+        map.addAttribute("numbers", numbers);
+        map.put("date", new DateTool());
+        return "expressList";
+    }
+
+    @RequestMapping("/getExpress")
+    public String getExpress(ModelMap map, HttpServletRequest request) {
+        Long id = Long.valueOf(request.getParameter("id").toString());
+        Express express = expressMapper.selectById(id);
+
+        map.addAttribute("data", express);
+        return "expressInfo";
+    }
+
+    @RequestMapping("/udpateExpress")
+    @ResponseBody
+    public Results udpateExpress(HttpServletRequest request) {
+        Long id = Long.valueOf(request.getParameter("id").toString());
+        String outOrderId = request.getParameter("outOrderId");
+        if (outOrderId != null && !outOrderId.equals("")) {
+            Express express = new Express();
+            express.setId(id);
+            express.setOutOrderId(outOrderId);
+            express.setStatus(2);
+            expressMapper.update(express);
+        }
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
 

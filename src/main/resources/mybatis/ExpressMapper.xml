@@ -34,7 +34,7 @@
         #{orderId},
         #{adressId},
         #{userId},
-        #{outOrderId},
+        '',
         #{status},
         Now()
         )
@@ -47,5 +47,22 @@
     <select id="selectById" parameterType="Long" resultMap="ExpressMap">
         SELECT <include refid="columns"/> FROM express WHERE express.id=#{id}
     </select>
+
+    <select id="selectAll" resultMap="ExpressMap">
+        SELECT <include refid="columns"/> FROM express WHERE 1=1
+        <if test="status != null"> AND status = #{status}</if>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="update" parameterType="com.dollapi.domain.Express">
+        UPDATE express
+        <set>
+        <if test="id != null">id = #{id},</if>
+        <if test="outOrderId != null">out_order_id = #{outOrderId},</if>
+        <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id= #{id}
+    </update>
+
 
 </mapper>

@@ -29,12 +29,12 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav nav">
                 <li><a href="#">首页</a></li>
-                <li class="active"><a href="/admin/user/userList">用户列表</a></li>
-                <li><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li><a href="/admin/user/userList">用户列表</a></li>
+                <li ><a href="/admin/machine/getMachineList">机器列表</a></li>
                 <li><a href="/admin/order/orderList">订单列表</a></li>
                 <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
                 <li><a href="/admin/order/rechargeOrderList">充值列表</a></li>
-                <li ><a href="/admin/order/expressList">邮寄列表</a></li>
+                <li class="active"><a href="/admin/order/expressList">邮寄列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
         ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
@@ -45,6 +45,8 @@
         </div>
     </div>
 </nav>
+
+
 <br>
 <br>
 <br>
@@ -53,57 +55,18 @@
 <br>
 <div class="container">
     <div class="form-group">
-        <label for="exampleInputEmail1">编号</label>
-        <input id="id" name="id" type="text" value="$user.id"/>
+        <label for="exampleInputEmail1">订单编号</label>
+        <input id="orderId" name="orderId" type="hidden" value="$data.orderId"/>
+        $data.orderId
+        <input id="id" name="id" type="hidden" value="$data.id"/>
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">昵称</label>
-        <input id="nickName" name="nickName" type="text" value="$user.nickName"/>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">等级</label>
-        <input id="userLevel" name="userLevel" type="text" value="$user.userLevel"/>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">手机号码</label>
-        <input id="phoneNumber" name="phoneNumber" type="text" value="$user.phoneNumber"/>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">积分</label>
-        <input id="userPoint" name="userPoint" type="text" value="$user.userPoint"/>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">游戏币</label>
-        <input id="gameMoney" name="gameMoney" type="text" value="$user.gameMoney"/>
-    </div>
-    <div class="form-group">
-        <label for="exampleInputEmail1">注册时间</label>
-        <input id="createTime" name="createTime" type="text"
-               value="$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)"/>
+        <label for="exampleInputEmail1">快递单号</label>
+        <input id="outOrderId" name="outOrderId" type="text" value="$data.outOrderId"/>
     </div>
 
 
-    <div class="form-group">
-
-        #foreach($add in $adressList)
-            <label for="exampleInputEmail1">收货地址：</label>
-                $add.person
-                $add.mobile
-                $add.address
-            <br>
-        #end
-##        <input id="createTime" name="createTime" type="text"
-##               value="$date.format('yyyy-MM-dd HH:mm:ss ',$user.createTime)"/>
-    </div>
-##    <div class="control-group">
-##        <div class="controls">
-##            <button type="submit" class="btn btn-default" onclick="updateUser()">保存</button>
-##        </div>
-##    </div>
-
-    <button type="button" class="btn btn-primary" onclick="updateUser()">保存</button>
-
-
+    <button type="button" class="btn btn-primary" onclick="update()">保存</button>
 </div>
 
 
@@ -111,24 +74,19 @@
 </html>
 
 <script type="text/javascript">
-    function updateUser() {
+    function update() {
         var id = $("#id").val();
-        var nickName = $("#nickName").val();
-        var userLevel = $("#userLevel").val();
-        var phoneNumber = $("#phoneNumber").val();
-        var userPoint = $("#userPoint").val();
-        var gameMoney = $("#gameMoney").val();
+        var orderId = $("#orderId").val();
+        var outOrderId = $("#outOrderId").val();
+
         $.ajax({
             type: "POST",
             data: {
                 id: id,
-                nickName: nickName,
-                userLevel: userLevel,
-                phoneNumber: phoneNumber,
-                userPoint: userPoint,
-                gameMoney: gameMoney
+                orderId: orderId,
+                outOrderId: outOrderId
             },
-            url: "/admin/user/updateUserInfo",
+            url: "/admin/order/udpateExpress",
             success: function (data) {
                 if (data.code == 200) {
                     alert("操作成功");

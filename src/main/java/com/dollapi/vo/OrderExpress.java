@@ -12,6 +12,8 @@ public class OrderExpress {
      */
     private Long id;
 
+    private String orderId;
+
     /**
      *
      */
@@ -80,6 +82,14 @@ public class OrderExpress {
      *
      */
     private String address;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
     public String getExpressOutOrderId() {
         return expressOutOrderId;

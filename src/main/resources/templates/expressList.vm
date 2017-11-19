@@ -30,11 +30,11 @@
             <ul class="navbar-nav nav">
                 <li><a href="#">首页</a></li>
                 <li ><a href="/admin/user/userList">用户列表</a></li>
-                <li><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li ><a href="/admin/machine/getMachineList">机器列表</a></li>
                 <li><a href="/admin/order/orderList">订单列表</a></li>
-                <li class="active"><a href="/admin/order/rechargePackageList">套餐列表</a></li>
+                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
                 <li><a href="/admin/order/rechargeOrderList">充值列表</a></li>
-                <li ><a href="/admin/order/expressList">邮寄列表</a></li>
+                <li class="active"><a href="/admin/order/expressList">邮寄列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
         ##                <input type="text" class="form-control" name="" placeholder="请输入搜索内容">
@@ -46,40 +46,49 @@
     </div>
 </nav>
 
-
+<br>
+<br>
+<br>
+<br>
 <div class="container-fluid">
-
     <div class="row-fluid">
-
         <div class="span12">
-            <h3>套餐列表</h3>
-            <button type="button" class="btn btn-primary" onclick="addPackageUI()">添加</button>
+            <button type="button" class="btn btn-primary" onclick="getStatus1()" >邮寄提醒</button>
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <td>编号</td>
-                    <td>套餐名</td>
-                    <td>套餐图片</td>
-                    <td>套餐价格</td>
-                    <td>充值游戏币</td>
+                    <td>订单编号</td>
+                    <td>用户名</td>
+                    <td>收件人</td>
+                    <td>电话</td>
+                    <td>地址</td>
+                    <td>机器名</td>
+                    <td>娃娃名</td>
+                    <td>运单号</td>
+                    <td>申请邮寄时间</td>
                     <td>状态</td>
-
-                    <td>创建时间</td>
                     <td>操作</td>
                 </tr>
                 </thead>
                 <tbody>
-                    #foreach($p in $list)
+                    #foreach($ex in $list)
                     <tr>
-                        <td>$p.id</td>
-                        <td>$p.packageName</td>
-                        <td>$p.packageUrl</td>
-                        <td>$p.price</td>
-                        <td>$p.gameMoney</td>
-                        <td>$p.status</td>
-
-                        <td>$date.format('yyyy-MM-dd HH:mm:ss ',$p.createTime)</td>
-                        <td><a href="/admin/order/getRechargePackage?id=$p.id">编辑</a> <a href="/admin/order/deletePackage?id=$p.id">删除</a></td>
+                        <td>$ex.orderId</td>
+                        <td>$ex.userName</td>
+                        <td>$ex.person</td>
+                        <td>$ex.mobile</td>
+                        <td>$ex.address</td>
+                        <td>$ex.machineName</td>
+                        <td>$ex.dollName</td>
+                        <td>$ex.expressOutOrderId</td>
+                        <td>$date.format('yyyy-MM-dd HH:mm:ss ',$ex.createTime)</td>
+                        #if ($ex.expressStatus==1)
+                            <td>申请</td>
+                        #end
+                        #if ($ex.expressStatus==2)
+                            <td>已邮寄</td>
+                        #end
+                        <td><a href="/admin/order/getExpress?id=$ex.id">邮寄</a></td>
                     </tr>
                     #end
                 </tbody>
@@ -108,10 +117,10 @@
 
     第 $pageNum 页
     #if($pageNum!=1)
-        <a href="/admin/order/rechargePackageList?page=$prePage">上一页</a>
+        <a href="/admin/order/expressList?page=$prePage">上一页</a>
     #end
     #if($pageNum!=$nextPage)
-        <a href="/admin/order/rechargePackageList?page=$nextPage">下一页</a>
+        <a href="/admin/order/expressList?page=$nextPage">下一页</a>
     #end
 
     跳转到
@@ -122,16 +131,18 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
         #foreach($n in $numbers)
-            <li><a href="/admin/order/rechargePackageList?page=$n">$n</a></li>
+            <li><a href="/admin/order/expressList?page=$n">$n</a></li>
         #end
     </ul>
 </div>
 
 
+
 </body>
 </html>
+
 <script type="text/javascript">
-    function addPackageUI() {
-        location.href="/admin/order/addRechargePackageUI";
+    function getStatus1() {
+        location.href="/admin/order/expressList?status=1"
     }
 </script>
