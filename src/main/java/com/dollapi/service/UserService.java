@@ -105,6 +105,37 @@ public class UserService {
             userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
             userInfoMapper.save(userInfo);
 
+
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+            uuid.replaceAll("o", "");
+            uuid.replaceAll("i", "");
+            uuid.replaceAll("l", "");
+            uuid.replaceAll("0", "");
+            uuid = uuid.toUpperCase();
+            if (userInfo.getId() < 10) {
+                uuid = uuid.substring(0, 6);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 9 && userInfo.getId() < 100) {
+                uuid = uuid.substring(0, 5);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 99 && userInfo.getId() < 1000) {
+                uuid = uuid.substring(0, 4);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 999 && userInfo.getId() < 10000) {
+                uuid = uuid.substring(0, 3);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 9999 && userInfo.getId() < 100000) {
+                uuid = uuid.substring(0, 2);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 99999 && userInfo.getId() < 1000000) {
+                uuid = uuid.substring(0, 1);
+                uuid = userInfo.getId().toString() + uuid;
+            } else {
+                uuid = uuid.substring(3, 10);
+            }
+            userInfo.setInvitationCode(uuid);
+            userInfoMapper.update(userInfo);
+
             UserThird userThird = new UserThird();
             userThird.setUserId(userInfo.getId());
             // FIXME: 2017/9/9 这里使用枚举

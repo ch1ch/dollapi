@@ -13,6 +13,7 @@ public enum ApiContents {
     USER_LOGIN_ERROR(2003, "用户身份信息错误，请从新登陆"),
     Invitation_ERROR(2004, "您已经被邀请过"),
     Invitation_CODE_ERROR(2005, "错误的邀请码"),
+    ADDRESS_ERROR(2006, "请天填写正确的联系人及地址"),
     MACHINE_USED(3001, "娃娃机游戏中，稍后再试"),
     CREATE_ORDER_ERROR(4001, "创建订单失败"),
     BACK_ORDER_ERROR(4002, "回调订单失败"),

@@ -50,7 +50,6 @@ public class UserController extends BaseController {
     }
 
 
-
     @RequestMapping("/addUserAddress")
     public Results addUserAddress(HttpServletRequest request) {
         String person = request.getParameter("person");
@@ -58,6 +57,10 @@ public class UserController extends BaseController {
         String address = request.getParameter("address");
         String token = request.getParameter("token");
         validParamsNotNull(person, mobile, address, token);
+
+        if (person == null || person.equals("") || mobile == null || mobile.equals("") || address == null || address.equals("")) {
+            return new Results(ApiContents.ADDRESS_ERROR.value(), ApiContents.ADDRESS_ERROR.desc());
+        }
         UserAdress userAdress = new UserAdress();
         userAdress.setUserId(getUserInfo(token).getId());
         userAdress.setPerson(person);
@@ -102,14 +105,37 @@ public class UserController extends BaseController {
 //        user.put("2", 16);
 //        ref.child("2").setValue(user);
 
-//        Map<String, Object> params = new HashMap<>();
-//        List<UserInfo> list = userInfoMapper.selectAllUser(params);
-//        for (UserInfo userInfo : list) {
-//            if (userInfo.getInvitationCode() == null || userInfo.getInvitationCode().equals("")) {
-//                userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
-//                userInfoMapper.update(userInfo);
-//            }
-//        }
+        Map<String, Object> params = new HashMap<>();
+        List<UserInfo> list = userInfoMapper.selectAllUser(params);
+        for (UserInfo userInfo : list) {
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+            uuid.replaceAll("o", "");
+            uuid.replaceAll("i", "");
+            uuid.replaceAll("l", "");
+            uuid.replaceAll("0", "");
+            uuid = uuid.toUpperCase();
+            if (userInfo.getId() < 10) {
+                uuid = uuid.substring(0, 6);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 9 && userInfo.getId() < 100) {
+                uuid = uuid.substring(0, 5);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 99 && userInfo.getId() < 1000) {
+                uuid = uuid.substring(0, 4);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 999 && userInfo.getId() < 10000) {
+                uuid = uuid.substring(0, 3);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 9999 && userInfo.getId() < 100000) {
+                uuid = uuid.substring(0, 2);
+                uuid = userInfo.getId().toString() + uuid;
+            } else if (userInfo.getId() > 99999 && userInfo.getId() < 1000000) {
+                uuid = uuid.substring(0, 1);
+                uuid = userInfo.getId().toString() + uuid;
+            }
+            userInfo.setInvitationCode(uuid);
+            userInfoMapper.update(userInfo);
+        }
 
         System.out.println("========================okokokokok==============================");
 
