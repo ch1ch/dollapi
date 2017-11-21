@@ -77,6 +77,10 @@ public class OrderController extends BaseController {
         express.setUserId(getUserInfo(token).getId());
         express.setStatus(1);
         expressMapper.save(express);
+        OrderInfo orderInfo=new OrderInfo();
+        orderInfo.setId(orderId);
+        orderInfo.setStatus(4);
+        orderInfoMapper.update(orderInfo);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 

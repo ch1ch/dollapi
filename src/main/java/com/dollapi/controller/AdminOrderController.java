@@ -271,11 +271,15 @@ public class AdminOrderController {
         Long id = Long.valueOf(request.getParameter("id").toString());
         String outOrderId = request.getParameter("outOrderId");
         if (outOrderId != null && !outOrderId.equals("")) {
-            Express express = new Express();
-            express.setId(id);
+            Express express = expressMapper.selectById(id);
+
             express.setOutOrderId(outOrderId);
             express.setStatus(2);
             expressMapper.update(express);
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.setId(express.getOrderId());
+            orderInfo.setStatus(5);
+            orderInfoMapper.update(orderInfo);
         }
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }

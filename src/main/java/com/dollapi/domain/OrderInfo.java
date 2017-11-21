@@ -55,7 +55,7 @@ public class OrderInfo {
     private String gameVideo;
 
     /**
-     * 1为初始，游戏中，已经付款，2为抓取失败，3为抓取成功
+     * 1为初始，游戏中，已经付款，2为抓取失败，3为抓取成功 ，4为申请邮寄 5为已经邮寄
      */
     private Integer status;
 

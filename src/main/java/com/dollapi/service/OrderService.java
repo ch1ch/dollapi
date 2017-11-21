@@ -264,7 +264,8 @@ public class OrderService {
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
         param.setDesc(p.getPackageName() + "充值" + p.getPrice().toString() + "获得" + p.getGameMoney().toString() + "游戏币");
-        param.setMoney("0.01");
+//        param.setMoney("0.01");
+        param.setMoney(p.getGameMoney().toString());
 
         String payInfo = api.pay(param, 10, "");
         return payInfo;

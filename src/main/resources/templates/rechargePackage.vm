@@ -30,10 +30,10 @@
             <ul class="navbar-nav nav">
                 <li><a href="#">首页</a></li>
                 <li><a href="/admin/user/userList">用户列表</a></li>
-                <li class="active"><a href="/admin/machine/getMachineList">机器列表</a></li>
+                <li ><a href="/admin/machine/getMachineList">机器列表</a></li>
                 <li><a href="/admin/order/orderList">订单列表</a></li>
                 <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
-                <li><a href="/admin/order/rechargeOrderList">充值列表</a></li>
+                <li class="active"><a href="/admin/order/rechargeOrderList">充值列表</a></li>
                 <li ><a href="/admin/order/expressList">邮寄列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
