@@ -175,7 +175,7 @@ public class OrderService {
                 orderInfo.setStatus(3);
             } else if (result != 3 && orderInfo.getStatus() != 3) {
                 orderInfo.setStatus(2);
-            } else {
+            } else if (result == 2 && (orderInfo.getStatus() == null || !orderInfo.getStatus().equals(3))) {
                 orderInfo.setStatus(2);
             }
             orderInfoMapper.update(orderInfo);
