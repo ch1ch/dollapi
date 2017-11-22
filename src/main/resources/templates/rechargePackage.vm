@@ -32,8 +32,8 @@
                 <li><a href="/admin/user/userList">用户列表</a></li>
                 <li ><a href="/admin/machine/getMachineList">机器列表</a></li>
                 <li><a href="/admin/order/orderList">订单列表</a></li>
-                <li><a href="/admin/order/rechargePackageList">套餐列表</a></li>
-                <li class="active"><a href="/admin/order/rechargeOrderList">充值列表</a></li>
+                <li class="active"><a href="/admin/order/rechargePackageList">套餐列表</a></li>
+                <li ><a href="/admin/order/rechargeOrderList">充值列表</a></li>
                 <li ><a href="/admin/order/expressList">邮寄列表</a></li>
             </ul>
         ##            <div class="navbar-form navbar-right" style="margin-right: 30px;">
@@ -94,31 +94,19 @@
 
 <script type="text/javascript">
     function updatePackage() {
+        var packageName = $("#packageName").val();
         var id = $("#id").val();
-        var machineName = $("#machineName").val();
-        var dollName = $("#dollName").val();
-        var ipAddress = $("#ipAddress").val();
-        var machineImg = $("#machineImg").val();
-        var dollImg = $("#dollImg").val();
-        var video1 = $("#video1").val();
-        var video2 = $("#video2").val();
-        var video3 = $("#video3").val();
+        var price = $("#price").val();
         var gameMoney = $("#gameMoney").val();
         $.ajax({
             type: "POST",
             data: {
-                id: 1,
-                machineName: machineName,
-                dollName: dollName,
-                ipAddress: ipAddress,
-                machineImg: machineImg,
-                dollImg: dollImg,
-                video1: video1,
-                video2: video2,
-                video3: video3,
+                packageName: packageName,
+                id: id,
+                price: price,
                 gameMoney: gameMoney
             },
-            url: "/admin/machine/updateMachine",
+            url: "/admin/order/updateRechargePackage",
             success: function (data) {
                 if (data.code == 200) {
                     alert("操作成功");

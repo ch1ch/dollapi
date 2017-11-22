@@ -153,6 +153,24 @@ public class AdminOrderController {
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
+    @RequestMapping("/updateRechargePackage")
+    @ResponseBody
+    public Results updateRechargePackage(HttpServletRequest request) {
+        RechargePackage p = new RechargePackage();
+
+        String packageName = request.getParameter("packageName").toString();
+        BigDecimal price = new BigDecimal(request.getParameter("price").toString());
+        Long gameMoney = Long.valueOf(request.getParameter("gameMoney").toString());
+        Long id = Long.valueOf(request.getParameter("id").toString());
+        p.setId(id);
+        p.setPackageName(packageName);
+        p.setPrice(price);
+        p.setGameMoney(gameMoney);
+        p.setStatus(1);
+        rechargePackageMapper.update(p);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
     @RequestMapping("/deletePackage")
     public String deletePackage(ModelMap map, HttpServletRequest request) {
         Long id = Long.valueOf(request.getParameter("id").toString());

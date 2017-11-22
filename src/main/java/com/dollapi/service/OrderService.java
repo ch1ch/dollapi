@@ -170,15 +170,20 @@ public class OrderService {
 
             OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
             // FIXME: 2017/9/10 这里使用枚举
-            if (result == 3) {
-                //抓到
-                orderInfo.setStatus(3);
-            } else if (result != 3 && orderInfo.getStatus() != 3) {
-                orderInfo.setStatus(2);
-            } else if (result == 2 && (orderInfo.getStatus() == null || !orderInfo.getStatus().equals(3))) {
-                orderInfo.setStatus(2);
+            if (orderInfo.getStatus().equals(3) || orderInfo.getStatus() > 3) {
+                //不能改
+            } else {
+                if (result == 3) {
+                    //抓到
+                    orderInfo.setStatus(3);
+                    orderInfoMapper.update(orderInfo);
+                } else {
+                    orderInfo.setStatus(2);
+                    orderInfoMapper.update(orderInfo);
+                }
             }
-            orderInfoMapper.update(orderInfo);
+
+
 
 //            List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
 //            if (userLineList != null && userLineList.size() > 0) {
