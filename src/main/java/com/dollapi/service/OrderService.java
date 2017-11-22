@@ -173,6 +173,8 @@ public class OrderService {
             if (result == 3) {
                 //抓到
                 orderInfo.setStatus(3);
+            } else if (result != 3 && orderInfo.getStatus() != 3) {
+                orderInfo.setStatus(2);
             } else {
                 orderInfo.setStatus(2);
             }
