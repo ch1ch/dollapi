@@ -2,6 +2,7 @@ package com.dollapi.controller;
 
 import com.dollapi.domain.UserAdress;
 import com.dollapi.domain.UserInfo;
+import com.dollapi.mapper.UserAdressMapper;
 import com.dollapi.mapper.UserInfoMapper;
 import com.dollapi.service.UserService;
 import com.dollapi.util.ApiContents;
@@ -31,6 +32,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private UserAdressMapper userAdressMapper;
 
     @Value("${tls.sdkappid}")
     private Long sdkAppId;
@@ -67,6 +71,15 @@ public class UserController extends BaseController {
         userAdress.setMobile(mobile);
         userAdress.setAddress(address);
         userService.addAddress(userAdress);
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+    }
+
+    @RequestMapping("/deleteAddress")
+    public Results deleteAddress(HttpServletRequest request) {
+        String token = request.getParameter("token");
+        Long id = request.getParameter("id") == null ? null : Long.valueOf(request.getParameter("id").toString());
+        getUserInfo(token);
+        userAdressMapper.deleteById(id);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 

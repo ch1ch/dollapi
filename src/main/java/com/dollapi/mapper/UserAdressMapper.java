@@ -18,4 +18,6 @@ public interface UserAdressMapper {
 
     UserAdress selectById(Long id);
 
+    public void deleteById(Long id);
+
 }

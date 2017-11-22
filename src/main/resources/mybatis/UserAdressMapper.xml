@@ -55,5 +55,9 @@
         SELECT <include refid="columns"/> FROM user_adress WHERE user_adress.id=#{id}
     </select>
 
+    <select id="deleteById" parameterType="Long">
+        DELETE FROM user_adress WHERE user_adress.id=#{id}
+    </select>
+
 
 </mapper> 
