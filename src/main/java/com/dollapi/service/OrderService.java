@@ -177,12 +177,13 @@ public class OrderService {
                     //抓到
                     orderInfo.setStatus(3);
                     orderInfoMapper.update(orderInfo);
+                    userInfo.setDollCount(userInfo.getDollCount() + 1);
+                    userInfoMapper.update(userInfo);
                 } else {
                     orderInfo.setStatus(2);
                     orderInfoMapper.update(orderInfo);
                 }
             }
-
 
 
 //            List<UserLine> userLineList = userLineMap.get(machineInfo.getId());
