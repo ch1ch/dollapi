@@ -296,6 +296,8 @@ public class OrderService {
         // FIXME: 2017/10/24 这里需要实现
         RechargeOrder order = rechargeOrderMapper.selectById(orderId);
         if(order.getStatus().equals(2) || !order.getOutPayOrder().equals("0000")){
+
+        }else{
             UserInfo user = userInfoMapper.selectUserById(order.getUserId());
             order.setStatus(2);
             order.setOutPayOrder(tradeNo);
