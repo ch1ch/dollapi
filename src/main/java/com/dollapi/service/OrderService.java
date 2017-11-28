@@ -295,9 +295,9 @@ public class OrderService {
     public void rechargeCallBack(String orderId, String tradeNo) {
         // FIXME: 2017/10/24 这里需要实现
         RechargeOrder order = rechargeOrderMapper.selectById(orderId);
-        if(order.getStatus().equals(2) || !order.getOutPayOrder().equals("0000")){
+        if (order.getStatus().equals(2) || !order.getOutPayOrder().equals("0000")) {
 
-        }else{
+        } else {
             UserInfo user = userInfoMapper.selectUserById(order.getUserId());
             order.setStatus(2);
             order.setOutPayOrder(tradeNo);
@@ -306,26 +306,37 @@ public class OrderService {
             //首冲活动
             Long add = 0L;
             List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectByUserId(user.getId());
-            if (rechargeOrderList == null || rechargeOrderList.size() == 0) {
-                if (order.getGameMoney() == 100) {
-                    add = 100L;
-                } else if (order.getGameMoney() == 200) {
-                    add = 120L;
-                } else if (order.getGameMoney() == 500) {
-                    add = 150L;
-                } else if (order.getGameMoney() == 1000) {
-                    add = 250L;
-                } else if (order.getGameMoney() == 5000) {
-                    add = 500L;
-                } else if (order.getGameMoney() == 10000) {
-                    add = 1000L;
+            if (rechargeOrderList == null || rechargeOrderList.size() == 1) {
+                add = act(order);
+            } else {
+                rechargeOrderList = rechargeOrderList.stream().filter(e -> e.getPackageId().equals(order.getPackageId())).filter(e -> e.getStatus().equals(2)).collect(Collectors.toList());
+                if (rechargeOrderList.size() < 2) {
+                    add = act(order);
                 }
-
             }
+
             user.setGameMoney(user.getGameMoney() + order.getGameMoney() + add);
             userInfoMapper.update(user);
             rechargeOrderMapper.update(order);
         }
+    }
+
+    private Long act(RechargeOrder order) {
+        Long add = 0L;
+        if (order.getGameMoney() == 100) {
+            add = 100L;
+        } else if (order.getGameMoney() == 200) {
+            add = 120L;
+        } else if (order.getGameMoney() == 500) {
+            add = 150L;
+        } else if (order.getGameMoney() == 1000) {
+            add = 250L;
+        } else if (order.getGameMoney() == 5000) {
+            add = 500L;
+        } else if (order.getGameMoney() == 10000) {
+            add = 1000L;
+        }
+        return add;
     }
 
 //    private void isUserLine(Long userId, MachineInfo machineInfo) {
