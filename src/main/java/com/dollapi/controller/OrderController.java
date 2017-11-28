@@ -164,7 +164,7 @@ public class OrderController extends BaseController {
 
 
     @RequestMapping("/rechargeCallBack1")
-    public Results rechargeCallBack(@RequestParam(required = false) Map<String, String> map) {
+    public String rechargeCallBack(@RequestParam(required = false) Map<String, String> map) {
         logger.info("===================================收到支付回调===================================" + JSON.toJSONStr(map));
         PayResult r = api.processNotify(map, 1);
         if (r.getStatus() == PayResult.PayStatus.success) {
@@ -173,7 +173,7 @@ public class OrderController extends BaseController {
 //            r.getOrderCode();//我方订单号
             orderService.rechargeCallBack(r.getOrderCode(), r.getTradeNo());
         }
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        return "success";
     }
 
     @RequestMapping("/callBack")

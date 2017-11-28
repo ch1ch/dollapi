@@ -295,33 +295,35 @@ public class OrderService {
     public void rechargeCallBack(String orderId, String tradeNo) {
         // FIXME: 2017/10/24 这里需要实现
         RechargeOrder order = rechargeOrderMapper.selectById(orderId);
-        UserInfo user = userInfoMapper.selectUserById(order.getUserId());
-        order.setStatus(2);
-        order.setOutPayOrder(tradeNo);
+        if(order.getStatus().equals(2) || !order.getOutPayOrder().equals("0000")){
+            UserInfo user = userInfoMapper.selectUserById(order.getUserId());
+            order.setStatus(2);
+            order.setOutPayOrder(tradeNo);
 
 
-        //首冲活动
-        Long add = 0L;
-        List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectByUserId(user.getId());
-        if (rechargeOrderList == null || rechargeOrderList.size() == 0) {
-            if (order.getGameMoney() == 100) {
-                add = 100L;
-            } else if (order.getGameMoney() == 200) {
-                add = 120L;
-            } else if (order.getGameMoney() == 500) {
-                add = 150L;
-            } else if (order.getGameMoney() == 1000) {
-                add = 250L;
-            } else if (order.getGameMoney() == 5000) {
-                add = 500L;
-            } else if (order.getGameMoney() == 10000) {
-                add = 1000L;
+            //首冲活动
+            Long add = 0L;
+            List<RechargeOrder> rechargeOrderList = rechargeOrderMapper.selectByUserId(user.getId());
+            if (rechargeOrderList == null || rechargeOrderList.size() == 0) {
+                if (order.getGameMoney() == 100) {
+                    add = 100L;
+                } else if (order.getGameMoney() == 200) {
+                    add = 120L;
+                } else if (order.getGameMoney() == 500) {
+                    add = 150L;
+                } else if (order.getGameMoney() == 1000) {
+                    add = 250L;
+                } else if (order.getGameMoney() == 5000) {
+                    add = 500L;
+                } else if (order.getGameMoney() == 10000) {
+                    add = 1000L;
+                }
+
             }
-
+            user.setGameMoney(user.getGameMoney() + order.getGameMoney() + add);
+            userInfoMapper.update(user);
+            rechargeOrderMapper.update(order);
         }
-        user.setGameMoney(user.getGameMoney() + order.getGameMoney() + add);
-        userInfoMapper.update(user);
-        rechargeOrderMapper.update(order);
     }
 
 //    private void isUserLine(Long userId, MachineInfo machineInfo) {
