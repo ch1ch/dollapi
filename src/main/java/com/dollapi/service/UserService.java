@@ -205,7 +205,7 @@ public class UserService {
         }
         ll = null;
         ll = invitationMapper.selectByRecommendUserId(userInfo1.getId());
-        if (ll.size() > 19) {
+        if (ll != null && ll.size() > 19) {
             throw new DollException(ApiContents.Invitation_ERROR.value(), ApiContents.Invitation_ERROR.desc());
         }
 
