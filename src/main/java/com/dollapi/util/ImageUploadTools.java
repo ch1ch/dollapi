@@ -10,17 +10,22 @@ import java.io.InputStream;
 
 public class ImageUploadTools {
 
-    private static final String ALIYUN_OSS_ACCESS_ID="LTAIOtMNzHLxxs0w";
-    private static final String ALIYUN_OSS_ACCESS_KEY="ecqegSn6j30wA17KhcPynxnmkUDCzZ";
-    private static final String ALIYUN_OSS_BUCKET_NAME="doll";
-    public static final String ALIYUN_QR_URL = "http://doll.oss-cn-beijing.aliyuncs.com/";
+//    private static final String ALIYUN_OSS_ACCESS_ID="LTAIOtMNzHLxxs0w";
+//    private static final String ALIYUN_OSS_ACCESS_KEY="ecqegSn6j30wA17KhcPynxnmkUDCzZ";
+//    private static final String ALIYUN_OSS_BUCKET_NAME="doll";
+//    public static final String ALIYUN_QR_URL = "http://doll.oss-cn-beijing.aliyuncs.com/";
+    private static final String ALIYUN_OSS_ACCESS_ID="LTAIsELyQ2IYcIZ2";
+    private static final String ALIYUN_OSS_ACCESS_KEY="jX06pkKE8SPVXcFFDa5nM1DhflBzn5";
+    private static final String ALIYUN_OSS_BUCKET_NAME="efun-oss";
+    public static final String ALIYUN_QR_URL = "http://efun-oss.oss-cn-beijing.aliyuncs.com/";
 
     private static Logger logger = LoggerFactory.getLogger(ImageUploadTools.class);
 
 
     public static String uploadQrFile(String fileName, InputStream is, String path) throws IOException {
         // 使用默认的OSS服务器地址创建OSSClient对象。
-        OSSClient client = new OSSClient("http://oss-cn-beijing.aliyuncs.com/",
+//        OSSClient client = new OSSClient("http://oss-cn-beijing.aliyuncs.com/",
+        OSSClient client = new OSSClient("http://efun-oss.oss-cn-beijing.aliyuncs.com/",
                 ALIYUN_OSS_ACCESS_ID, ALIYUN_OSS_ACCESS_KEY);
 
         String key = path + fileName;
