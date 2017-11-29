@@ -199,11 +199,14 @@ public class UserService {
         if (ll != null && ll.size() > 0) {
             throw new DollException(ApiContents.Invitation_ERROR.value(), ApiContents.Invitation_ERROR.desc());
         }
-
         UserInfo userInfo1 = userInfoMapper.selectByCode(code);
-
         if (userInfo1 == null) {
             throw new DollException(ApiContents.Invitation_CODE_ERROR.value(), ApiContents.Invitation_CODE_ERROR.desc());
+        }
+        ll = null;
+        ll = invitationMapper.selectByRecommendUserId(userInfo1.getId());
+        if (ll.size() > 19) {
+            throw new DollException(ApiContents.Invitation_ERROR.value(), ApiContents.Invitation_ERROR.desc());
         }
 
         Invitation invitation = new Invitation();

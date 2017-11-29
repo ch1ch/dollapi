@@ -35,5 +35,9 @@
         SELECT <include refid="columns"/> FROM invitation WHERE invitation.user_id=#{userId}
     </select>
 
+    <select id="selectByRecommendUserId" parameterType="Long" resultMap="InvitationMap">
+        SELECT <include refid="columns"/> FROM invitation WHERE invitation.recommend_user_id=#{recommendUserId}
+    </select>
+
 
 </mapper>

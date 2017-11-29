@@ -14,4 +14,6 @@ public interface InvitationMapper {
 
     public List<Invitation> selectByUserId(Long userId);
 
+    List<Invitation> selectByRecommendUserId(Long recommendUserId);
+
 }
