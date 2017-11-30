@@ -47,6 +47,20 @@ public class UserTest {
     private RechargeOrderMapper rechargeOrderMapper;
 
     @Test
+    public void callBack(){
+        UserInfo userInfo=new UserInfo();
+        userInfo.setId(4129L);
+        userInfo.setDollCount(0L);
+
+        orderService.callBack(userInfo,1L,"1291adc8c14449b38725d0579565d8cc",2);
+    }
+
+    @Test
+    public void rechargeCallBack(){
+        orderService.rechargeCallBack("9bf67e4e120b4d5db6196ec10cf595f5","testtest");
+    }
+
+    @Test
 //    @Rollback
     public void findByName() throws Exception {
         UserThird yser = userThirdMapper.selectByUnionId("fangh23");

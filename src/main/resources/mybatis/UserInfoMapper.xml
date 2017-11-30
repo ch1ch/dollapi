@@ -112,4 +112,8 @@
         FROM user_info WHERE user_info.invitation_code=#{code}
     </select>
 
+    <select id="selectUserCount" resultType="Long">
+        SELECT COUNT(1) FROM user_info
+    </select>
+
 </mapper> 

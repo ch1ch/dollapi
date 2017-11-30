@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -161,12 +162,13 @@ public class OrderService {
         return true;
     }
 
+    @Transactional
     public void callBack(UserInfo userInfo, Long machineId, String orderId, Integer result) {
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
             // FIXME: 2017/9/10 这里用枚举
             machineInfo.setStatus(1);
-            machineInfoMapper.update(machineInfo);
+//            machineInfoMapper.update(machineInfo);
 
             OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
             // FIXME: 2017/9/10 这里使用枚举
@@ -266,8 +268,8 @@ public class OrderService {
 //        userInfoMapper.update(user);
         PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
 //        api.notifyUrl("legendream.cn  成功回调");
-//        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
-        api.notifyUrl("http://47.94.236.45:9900/order/rechargeCallBack");
+        api.notifyUrl("http://47.94.236.45:9000/order/rechargeCallBack");
+//        api.notifyUrl("http://47.94.236.45:9900/order/rechargeCallBack");
         PayParam param = new PayParam();
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
@@ -415,7 +417,7 @@ public class OrderService {
         ref.child(machineId.toString()).setValue(map);
     }
 
-    @Scheduled(cron = "0/5 * *  * * ? ")
+    @Scheduled(cron = "0/10 * *  * * ? ")
     private void outLine() {
         if (allMachineInfo == null || allMachineInfo.size() < 1) {
             allMachineInfo = machineInfoMapper.selectAll();
@@ -423,7 +425,7 @@ public class OrderService {
         for (MachineInfo machineInfo : allMachineInfo) {
             if (machineInfo.getStatus().equals(2)) {
                 OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(machineInfo.getId());
-                if (orderInfo != null && (65 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
+                if (orderInfo != null && (70 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
                     machineInfo.setStatus(1);
                     machineInfoMapper.update(machineInfo);
                     orderInfo.setStatus(2);

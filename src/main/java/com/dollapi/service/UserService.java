@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -82,6 +83,7 @@ public class UserService {
 //
 //    }
 
+    @Transactional
     public UserInfo WXLogin(String code) {
 
         WXUserInfo wxUserInfo = WXApi.getUserInfo(code, appid, secret);
@@ -103,38 +105,37 @@ public class UserService {
             userInfo.setGameMoney(100L);
             userInfo.setHeadUrl(getWXImage(wxUserInfo.getHeadImgUrl(), UUID.randomUUID().toString().replaceAll("-", ""), ""));
             userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
-            userInfoMapper.save(userInfo);
-
-
+            Long count=userInfoMapper.selectUserCount();
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");
             uuid.replaceAll("o", "");
             uuid.replaceAll("i", "");
             uuid.replaceAll("l", "");
             uuid.replaceAll("0", "");
             uuid = uuid.toUpperCase();
-            if (userInfo.getId() < 10) {
+            if (count < 10) {
                 uuid = uuid.substring(0, 6);
                 uuid = userInfo.getId().toString() + uuid;
-            } else if (userInfo.getId() > 9 && userInfo.getId() < 100) {
+            } else if (count > 9 && count < 100) {
                 uuid = uuid.substring(0, 5);
-                uuid = userInfo.getId().toString() + uuid;
-            } else if (userInfo.getId() > 99 && userInfo.getId() < 1000) {
+                uuid = count.toString() + uuid;
+            } else if (count > 99 && count < 1000) {
                 uuid = uuid.substring(0, 4);
-                uuid = userInfo.getId().toString() + uuid;
-            } else if (userInfo.getId() > 999 && userInfo.getId() < 10000) {
+                uuid = count.toString() + uuid;
+            } else if (count > 999 && count < 10000) {
                 uuid = uuid.substring(0, 3);
-                uuid = userInfo.getId().toString() + uuid;
-            } else if (userInfo.getId() > 9999 && userInfo.getId() < 100000) {
+                uuid = count.toString() + uuid;
+            } else if (count > 9999 && count < 100000) {
                 uuid = uuid.substring(0, 2);
-                uuid = userInfo.getId().toString() + uuid;
-            } else if (userInfo.getId() > 99999 && userInfo.getId() < 1000000) {
+                uuid = count.toString() + uuid;
+            } else if (count > 99999 && count < 1000000) {
                 uuid = uuid.substring(0, 1);
-                uuid = userInfo.getId().toString() + uuid;
+                uuid = count.toString() + uuid;
             } else {
                 uuid = uuid.substring(3, 10);
             }
             userInfo.setInvitationCode(uuid);
-            userInfoMapper.update(userInfo);
+
+            userInfoMapper.save(userInfo);
 
             UserThird userThird = new UserThird();
             userThird.setUserId(userInfo.getId());

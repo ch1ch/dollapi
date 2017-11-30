@@ -29,4 +29,6 @@ public interface UserInfoMapper {
     List<UserInfo> selectAllUser(Map<String,Object> params);
 
     UserInfo selectUserById(Long userId);
+
+    Long selectUserCount();
 }
