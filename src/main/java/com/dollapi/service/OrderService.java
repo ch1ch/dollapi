@@ -162,7 +162,7 @@ public class OrderService {
         return true;
     }
 
-    @Transactional
+    //    @Transactional
     public void callBack(UserInfo userInfo, Long machineId, String orderId, Integer result) {
         try {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
@@ -181,10 +181,11 @@ public class OrderService {
                     orderInfoMapper.update(orderInfo);
                     userInfo.setDollCount(userInfo.getDollCount() + 1);
                     userInfoMapper.update(userInfo);
-                } else {
-                    orderInfo.setStatus(2);
-                    orderInfoMapper.update(orderInfo);
                 }
+//                } else {
+//                    orderInfo.setStatus(2);
+//                    orderInfoMapper.update(orderInfo);
+//                }
             }
 
 
@@ -312,7 +313,7 @@ public class OrderService {
                 add = act(order);
             } else {
                 rechargeOrderList = rechargeOrderList.stream().filter(e -> e.getPackageId().equals(order.getPackageId())).filter(e -> e.getStatus().equals(2)).collect(Collectors.toList());
-                if (rechargeOrderList.size() < 2) {
+                if (rechargeOrderList.size() < 1) {
                     add = act(order);
                 }
             }
@@ -328,15 +329,15 @@ public class OrderService {
         if (order.getGameMoney() == 100) {
             add = 100L;
         } else if (order.getGameMoney() == 200) {
-            add = 120L;
+            add = 30L;
         } else if (order.getGameMoney() == 500) {
-            add = 150L;
+            add = 80L;
         } else if (order.getGameMoney() == 1000) {
-            add = 250L;
+            add = 190L;
+        } else if (order.getGameMoney() == 3000) {
+            add = 620L;
         } else if (order.getGameMoney() == 5000) {
-            add = 500L;
-        } else if (order.getGameMoney() == 10000) {
-            add = 1000L;
+            add = 1100L;
         }
         return add;
     }
@@ -419,17 +420,16 @@ public class OrderService {
 
     @Scheduled(cron = "0/10 * *  * * ? ")
     private void outLine() {
-        if (allMachineInfo == null || allMachineInfo.size() < 1) {
-            allMachineInfo = machineInfoMapper.selectAll();
-        }
+        System.out.println(111111);
+        allMachineInfo = machineInfoMapper.selectAll();
         for (MachineInfo machineInfo : allMachineInfo) {
             if (machineInfo.getStatus().equals(2)) {
                 OrderInfo orderInfo = orderInfoMapper.selectOneByMachineId(machineInfo.getId());
                 if (orderInfo != null && (70 < ((new Date().getTime() - orderInfo.getCreateTime().getTime()) / 1000))) {
                     machineInfo.setStatus(1);
                     machineInfoMapper.update(machineInfo);
-                    orderInfo.setStatus(2);
-                    orderInfoMapper.update(orderInfo);
+//                    orderInfo.setStatus(2);
+//                    orderInfoMapper.update(orderInfo);
                 }
             }
         }

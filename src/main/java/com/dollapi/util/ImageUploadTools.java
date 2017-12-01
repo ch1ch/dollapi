@@ -25,7 +25,7 @@ public class ImageUploadTools {
     public static String uploadQrFile(String fileName, InputStream is, String path) throws IOException {
         // 使用默认的OSS服务器地址创建OSSClient对象。
 //        OSSClient client = new OSSClient("http://oss-cn-beijing.aliyuncs.com/",
-        OSSClient client = new OSSClient("http://efun-oss.oss-cn-beijing.aliyuncs.com/",
+        OSSClient client = new OSSClient("http://oss-cn-beijing.aliyuncs.com/",
                 ALIYUN_OSS_ACCESS_ID, ALIYUN_OSS_ACCESS_KEY);
 
         String key = path + fileName;
