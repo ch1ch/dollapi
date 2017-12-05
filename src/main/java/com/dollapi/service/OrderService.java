@@ -420,7 +420,6 @@ public class OrderService {
 
     @Scheduled(cron = "0/10 * *  * * ? ")
     private void outLine() {
-        System.out.println(111111);
         allMachineInfo = machineInfoMapper.selectAll();
         for (MachineInfo machineInfo : allMachineInfo) {
             if (machineInfo.getStatus().equals(2)) {
