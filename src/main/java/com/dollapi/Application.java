@@ -2,6 +2,7 @@ package com.dollapi;
 
 import com.common.pay.PayAPI;
 import com.dollapi.filter.SignFilter;
+import com.dollapi.filter.WebLoginFilter;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,17 @@ public class Application {
 //        registrationBean.setUrlPatterns(urlPatterns);
 //        return registrationBean;
 //    }
+
+    @Bean
+    public FilterRegistrationBean filterWebLoginBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        WebLoginFilter webLoginFilter = new WebLoginFilter();
+        registrationBean.setFilter(webLoginFilter);
+        List<String> urlPatterns = new ArrayList<String>();
+        urlPatterns.add("/admin/*");
+        registrationBean.setUrlPatterns(urlPatterns);
+        return registrationBean;
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")

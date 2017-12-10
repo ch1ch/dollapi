@@ -18,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 /**
  * <p>Copyright: All Rights Reserved</p>
@@ -111,6 +113,32 @@ public class AdminUserController {
         userInfoMapper.update(user);
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
+
+    @RequestMapping("/login")
+    public String webLoginUI() {
+        return "webLogin";
+    }
+
+    @RequestMapping("/webLogin")
+    @ResponseBody
+    public Results webLogin(HttpSession session, HttpServletRequest request) {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        if (username == null) {
+            username = "";
+        }
+        if (password == null) {
+            password = "";
+        }
+        if (username.equals("efun") && password.equals("Ecc@0312")) {
+            session.setAttribute("account", "efun");
+            return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        } else {
+            return new Results(ApiContents.USER_LOGIN_ERROR.value(), ApiContents.USER_LOGIN_ERROR.desc());
+        }
+    }
+
+
 
 
 }

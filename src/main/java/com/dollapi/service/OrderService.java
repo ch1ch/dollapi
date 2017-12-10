@@ -168,7 +168,7 @@ public class OrderService {
             MachineInfo machineInfo = machineInfoMapper.selectById(machineId);
             // FIXME: 2017/9/10 这里用枚举
             machineInfo.setStatus(1);
-//            machineInfoMapper.update(machineInfo);
+            machineInfoMapper.update(machineInfo);
 
             OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
             // FIXME: 2017/9/10 这里使用枚举
