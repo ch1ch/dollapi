@@ -82,8 +82,11 @@
                         <td>$ex.dollName</td>
                         <td>$ex.expressOutOrderId</td>
                         <td>$date.format('yyyy-MM-dd HH:mm:ss ',$ex.createTime)</td>
+                        #if ($ex.expressStatus==0)
+                            <td>待支付邮费</td>
+                        #end
                         #if ($ex.expressStatus==1)
-                            <td>申请</td>
+                            <td>申请成功</td>
                         #end
                         #if ($ex.expressStatus==2)
                             <td>已邮寄</td>

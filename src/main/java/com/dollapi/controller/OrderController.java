@@ -155,10 +155,12 @@ public class OrderController extends BaseController {
     @RequestMapping("/recharge")
     public Results recharge(HttpServletRequest request) {
         String token = request.getParameter("token");
-//        Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
-//        Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
-//        String outPayOrder = request.getParameter("outPayOrder");
-
+        Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
+        Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
+        String outPayOrder = request.getParameter("outPayOrder");
+        if (packageId != null || payType != null || outPayOrder != null) {
+            return new Results(ApiContents.ACT_RE_ERROR.value(), ApiContents.ACT_RE_ERROR.desc());
+        }
 
 //        validParamsNotNull(token, packageId, payType);
         validParamsNotNull(token);

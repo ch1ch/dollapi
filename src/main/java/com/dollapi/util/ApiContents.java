@@ -21,7 +21,8 @@ public enum ApiContents {
     PUT_USER_LINE(4004, "已经加入当前机器排位，前位玩家结束后再游戏下单"),
     IS_YOUR(4005, "已经是当前玩家，请开始游戏"),
     LTS_ERROR(5001, "LTS错误"),
-    ACT_DAY_ERROR(6001, "今日已经参加过活动");
+    ACT_DAY_ERROR(6001, "今日已经参加过活动"),
+    ACT_RE_ERROR(6002, "《拜见宫主大人》活动期间，无法通过充值游戏币开始游戏，请通过首页获得获得免费游戏币进行游戏。");
 
     private Integer value;
     private String desc;

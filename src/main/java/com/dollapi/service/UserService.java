@@ -102,7 +102,7 @@ public class UserService {
             userInfo.setUserPoint(0L);
             userInfo.setUserLevel(1);
             // FIXME: 2017/10/2 100注册活动
-            userInfo.setGameMoney(100L);
+            userInfo.setGameMoney(0L);
             userInfo.setHeadUrl(getWXImage(wxUserInfo.getHeadImgUrl(), UUID.randomUUID().toString().replaceAll("-", ""), ""));
             userInfo.setInvitationCode(UUID.randomUUID().toString().replaceAll("-", ""));
             Long count=userInfoMapper.selectUserCount();

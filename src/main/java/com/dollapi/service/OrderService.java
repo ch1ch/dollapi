@@ -278,6 +278,7 @@ public class OrderService {
         param.setSubject(p.getPackageName());
         param.setOutTradeNo(order.getId());
         param.setDesc(p.getPackageName() + "充值" + p.getPrice().toString() + "获得" + p.getGameMoney().toString() + "游戏币");
+
 //        param.setMoney("0.01");
         param.setMoney(p.getPrice().toString());
 
@@ -300,11 +301,12 @@ public class OrderService {
         param.setSubject("邮费");
         param.setOutTradeNo("miaomiaoyouji" + express.getId().toString());
         param.setDesc("邮费");
+        param.setReturnUrl("http://miao.legendream.cn/#/order");
 //        param.setMoney("0.01");
-        // FIXME: 2017/12/23 邮费
-        param.setMoney("0.01");
+        // FIXME: 2017/12/23 邮费0.01
+        param.setMoney("15");
 
-        String payInfo = api.pay(param, 10, "");
+        String payInfo = api.pay(param, 11, "");
         return payInfo;
     }
 
@@ -327,7 +329,7 @@ public class OrderService {
             return new Results(ApiContents.ACT_DAY_ERROR.value(), ApiContents.ACT_DAY_ERROR.desc());
         } else {
             rechargeMiaoMiaoMapper.insert(userInfo.getId());
-            userInfo.setGameMoney(userInfo.getGameMoney() + 40);
+            userInfo.setGameMoney(userInfo.getGameMoney() + 60);
             userInfoMapper.update(userInfo);
             return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
         }
