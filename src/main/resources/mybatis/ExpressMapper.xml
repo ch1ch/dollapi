@@ -26,7 +26,7 @@
     </resultMap>
 
     <!-- save machine_info -->
-    <insert id="save" parameterType="com.dollapi.domain.Express">
+    <insert id="save" parameterType="com.dollapi.domain.Express" useGeneratedKeys="true" keyProperty="id">
         insert into express (
         <include refid="columns"/>)
         values (

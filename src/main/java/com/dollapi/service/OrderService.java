@@ -78,6 +78,9 @@ public class OrderService {
     @Autowired
     private UserAdressMapper userAdressMapper;
 
+    @Autowired
+    private RechargeMiaoMiaoMapper rechargeMiaoMiaoMapper;
+
 //    private static Map<Long, List<UserLine>> userLineMap = new HashMap<>();
 
 //    private static boolean inGame = true;
@@ -282,6 +285,29 @@ public class OrderService {
         return payInfo;
     }
 
+    public String addExpressMiaoMiao(UserInfo user, String orderId, Long adressId) {
+        Express express = new Express();
+        express.setOrderId(orderId);
+        express.setAdressId(adressId);
+        express.setUserId(user.getId());
+        express.setStatus(0);
+        expressMapper.save(express);
+
+
+        PayAPI api = PayAPI.instance().ali(aliAppId, aliAppPrivateKey, aliAppPublicKey, aliPublicKey, "json", "RSA");
+        api.notifyUrl("http://47.94.236.45:9900/order/rechargeCallBack");
+        PayParam param = new PayParam();
+        param.setSubject("邮费");
+        param.setOutTradeNo("miaomiaoyouji" + express.getId().toString());
+        param.setDesc("邮费");
+//        param.setMoney("0.01");
+        // FIXME: 2017/12/23 邮费
+        param.setMoney("0.01");
+
+        String payInfo = api.pay(param, 10, "");
+        return payInfo;
+    }
+
     //暂时不用
     public String rechargePay(Long packageId) {
         RechargePackage rechargePackage = rechargePackageMapper.selectById(packageId);
@@ -293,6 +319,18 @@ public class OrderService {
         param.setDesc(rechargePackage.getPackageName() + "充值" + rechargePackage.getPrice().toString() + "获得" + rechargePackage.getGameMoney().toString() + "游戏币");
         String payInfo = api.pay(param, 10, "");
         return payInfo;
+    }
+
+    public Results rechargeMiaoMiao(UserInfo userInfo) {
+        Long count = rechargeMiaoMiaoMapper.selectToDayCountByUserId(userInfo.getId());
+        if (count > 0) {
+            return new Results(ApiContents.ACT_DAY_ERROR.value(), ApiContents.ACT_DAY_ERROR.desc());
+        } else {
+            rechargeMiaoMiaoMapper.insert(userInfo.getId());
+            userInfo.setGameMoney(userInfo.getGameMoney() + 40);
+            userInfoMapper.update(userInfo);
+            return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        }
     }
 
     public void rechargeCallBack(String orderId, String tradeNo) {

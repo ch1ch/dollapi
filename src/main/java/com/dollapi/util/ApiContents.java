@@ -20,7 +20,8 @@ public enum ApiContents {
     PACKAGE_ERROR(4003, "无效的充值套餐"),
     PUT_USER_LINE(4004, "已经加入当前机器排位，前位玩家结束后再游戏下单"),
     IS_YOUR(4005, "已经是当前玩家，请开始游戏"),
-    LTS_ERROR(5001, "LTS错误");
+    LTS_ERROR(5001, "LTS错误"),
+    ACT_DAY_ERROR(6001, "今日已经参加过活动");
 
     private Integer value;
     private String desc;

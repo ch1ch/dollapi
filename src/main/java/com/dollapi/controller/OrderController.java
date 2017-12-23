@@ -71,17 +71,21 @@ public class OrderController extends BaseController {
         String orderId = request.getParameter("orderId");
 
         validParamsNotNull(token, adressId, orderId);
-        Express express = new Express();
-        express.setOrderId(orderId);
-        express.setAdressId(adressId);
-        express.setUserId(getUserInfo(token).getId());
-        express.setStatus(1);
-        expressMapper.save(express);
-        OrderInfo orderInfo=new OrderInfo();
-        orderInfo.setId(orderId);
-        orderInfo.setStatus(4);
-        orderInfoMapper.update(orderInfo);
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
+        String payInfo = orderService.addExpressMiaoMiao(getUserInfo(token), orderId, adressId);
+
+        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
+
+//        Express express = new Express();
+//        express.setOrderId(orderId);
+//        express.setAdressId(adressId);
+//        express.setUserId(getUserInfo(token).getId());
+//        express.setStatus(1);
+//        expressMapper.save(express);
+//        OrderInfo orderInfo = new OrderInfo();
+//        orderInfo.setId(orderId);
+//        orderInfo.setStatus(4);
+//        orderInfoMapper.update(orderInfo);
+//        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc());
     }
 
     @RequestMapping("/getExpressByUserId")
@@ -104,7 +108,6 @@ public class OrderController extends BaseController {
         map.put("prePage", pageInfo.getPrePage());
         return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), map);
     }
-
 
 
     @RequestMapping("/getOrderById")
@@ -152,14 +155,17 @@ public class OrderController extends BaseController {
     @RequestMapping("/recharge")
     public Results recharge(HttpServletRequest request) {
         String token = request.getParameter("token");
-        Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
-        Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
+//        Long packageId = request.getParameter("packageId") == null ? null : Long.valueOf(request.getParameter("packageId").toString());
+//        Integer payType = request.getParameter("payType") == null ? null : Integer.valueOf(request.getParameter("payType").toString());
 //        String outPayOrder = request.getParameter("outPayOrder");
 
 
-        validParamsNotNull(token, packageId, payType);
-        String payInfo = orderService.recharge(getUserInfo(token), packageId, payType);
-        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
+//        validParamsNotNull(token, packageId, payType);
+        validParamsNotNull(token);
+        return orderService.rechargeMiaoMiao(getUserInfo(token));
+//        String payInfo = orderService.recharge(getUserInfo(token), packageId, payType);
+
+//        return new Results(ApiContents.NORMAL.value(), ApiContents.NORMAL.desc(), payInfo);
     }
 
 
@@ -171,7 +177,16 @@ public class OrderController extends BaseController {
             //支付成功
 //            r.getTradeNo();//支付宝流水号
 //            r.getOrderCode();//我方订单号
-            orderService.rechargeCallBack(r.getOrderCode(), r.getTradeNo());
+//            orderService.rechargeCallBack(r.getOrderCode(), r.getTradeNo());
+            String id = r.getOrderCode().replace("miaomiaoyouji", "");
+            Express express = expressMapper.selectById(Long.valueOf(id));
+            express.setStatus(1);
+            expressMapper.update(express);
+
+            OrderInfo orderInfo = new OrderInfo();
+            orderInfo.setId(express.getOrderId());
+            orderInfo.setStatus(4);
+            orderInfoMapper.update(orderInfo);
         }
         return "success";
     }

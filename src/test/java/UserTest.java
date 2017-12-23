@@ -2,9 +2,7 @@ import com.dollapi.Application;
 import com.dollapi.domain.RechargeOrder;
 import com.dollapi.domain.UserInfo;
 import com.dollapi.domain.UserThird;
-import com.dollapi.mapper.RechargeOrderMapper;
-import com.dollapi.mapper.UserInfoMapper;
-import com.dollapi.mapper.UserThirdMapper;
+import com.dollapi.mapper.*;
 
 import com.dollapi.service.OrderService;
 import com.dollapi.service.UserService;
@@ -46,18 +44,21 @@ public class UserTest {
     @Autowired
     private RechargeOrderMapper rechargeOrderMapper;
 
+    @Autowired
+    private RechargeMiaoMiaoMapper rechargeMiaoMiaoMapper;
+
     @Test
-    public void callBack(){
-        UserInfo userInfo=new UserInfo();
+    public void callBack() {
+        UserInfo userInfo = new UserInfo();
         userInfo.setId(4129L);
         userInfo.setDollCount(0L);
 
-        orderService.callBack(userInfo,1L,"1291adc8c14449b38725d0579565d8cc",2);
+        orderService.callBack(userInfo, 1L, "1291adc8c14449b38725d0579565d8cc", 2);
     }
 
     @Test
-    public void rechargeCallBack(){
-        orderService.rechargeCallBack("11118c3528b45ffad2025b9f63de514","testtest");
+    public void rechargeCallBack() {
+        orderService.rechargeCallBack("11118c3528b45ffad2025b9f63de514", "testtest");
     }
 
     @Test
@@ -155,6 +156,16 @@ public class UserTest {
                 userInfoMapper.update(userInfo);
             }
         }
+    }
+
+    @Test
+    public void selectToDayCountByUserId() {
+//        Long i=rechargeMiaoMiaoMapper.selectToDayCountByUserId(1L);
+//        System.out.println(1);
+        String a = "miaomiaoyouji123";
+
+        a = a.replace("miaomiaoyouji", "");
+        System.out.println(1);
     }
 
 
